@@ -2,6 +2,7 @@
 const int lineFollowSensor0 = A3;
 const int lineFollowSensor1 = A2;
 const int lineFollowSensor2 = A7;
+//will not be modified
 const int lineFollowSensor3 = 12;
 const int lineFollowSensor4 = 13;
 int LFSensor[5] = {0, 0, 0, 0, 0};
