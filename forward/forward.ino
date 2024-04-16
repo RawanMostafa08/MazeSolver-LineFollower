@@ -35,7 +35,6 @@ void setup() {
   
   digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);
-
 }
 
 void loop() {
