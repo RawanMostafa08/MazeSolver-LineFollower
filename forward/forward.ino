@@ -1,6 +1,6 @@
   // put your setup code here, to run once:
   // IN1 -> d8 --- IN4 -> d5
-  // ENA -> d11
+  e:\CMP3\second_semester\Embedded\project\optical_encoder3\optical_encoder3.ino// ENA -> d11
   // ENB -> d10
 
 #define enA 11
@@ -8,7 +8,7 @@
 #define in1 8
 #define in2 7
 #define in3 6
-#define in4 5
+#define in4 2
 
 void setup() {
   pinMode(enA, OUTPUT);
