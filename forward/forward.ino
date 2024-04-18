@@ -1,6 +1,6 @@
   // put your setup code here, to run once:
   // IN1 -> d8 --- IN4 -> d5
-  e:\CMP3\second_semester\Embedded\project\optical_encoder3\optical_encoder3.ino// ENA -> d11
+  // ENA -> d11
   // ENB -> d10
 
 #define enA 11
