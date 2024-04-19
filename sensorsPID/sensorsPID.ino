@@ -24,8 +24,9 @@ int lfspeed = 80;
 float Kp = 10;
 float Ki = 0;
 float Kd = 0;
+int error;
 int getError(int sensor1, int sensor2, int sensor3, int sensor4, int sensor5);
-int calculatePID(int error);
+int calculatePID();
 
 void setup()
 {
@@ -55,15 +56,14 @@ void loop()
     int sensor3 = digitalRead(A3);
     int sensor4 = digitalRead(A4);
     int sensor5 = digitalRead(A5);
-    int error = getError(sensor1, sensor2, sensor3, sensor4, sensor5);
-    int PIDval = calculatePID(error);
+    calculateError(sensor1, sensor2, sensor3, sensor4, sensor5);
+    int PIDval = calculatePID();
     motorPIDcontrol();
 }
 
-int getError(int sensor1, int sensor2, int sensor3, int sensor4, int sensor5)
+void calculateError(int sensor1, int sensor2, int sensor3, int sensor4, int sensor5)
 {
-  int error;
-    if      ((sensor1 == 1) && (sensor2 == 1) && (sensor3 == 1) && (sensor4 == 1) && (sensor5 == 0))
+    if ((sensor1 == 1) && (sensor2 == 1) && (sensor3 == 1) && (sensor4 == 1) && (sensor5 == 0))
         error = 4;
 
     else if ((sensor1 == 1) && (sensor2 == 1) && (sensor3 == 1) && (sensor4 == 0) && (sensor5 == 0))
@@ -89,9 +89,8 @@ int getError(int sensor1, int sensor2, int sensor3, int sensor4, int sensor5)
 
     else if ((sensor1 == 0) && (sensor2 == 1) && (sensor3 == 1) && (sensor4 == 1) && (sensor5 == 1))
         error = -4;
-    return error;
 }
-int calculatePID(int error)
+int calculatePID()
 {
      P = error;
      I = I + error;
