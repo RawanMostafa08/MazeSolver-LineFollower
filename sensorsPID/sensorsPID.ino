@@ -21,9 +21,9 @@ int lfspeed = 80;
 // float Kp = 0.083;
 // float Kd = 0.23;
 // float Ki = 0;
-float Kp = 10;
-float Ki = 0;
-float Kd = 0;
+float Kp = 8;
+float Ki = 0.3;
+float Kd = 3;
 int error;
 int getError(int sensor1, int sensor2, int sensor3, int sensor4, int sensor5);
 int calculatePID();
@@ -88,7 +88,19 @@ void calculateError(int sensor1, int sensor2, int sensor3, int sensor4, int sens
         error = -3;
 
     else if ((sensor1 == 0) && (sensor2 == 1) && (sensor3 == 1) && (sensor4 == 1) && (sensor5 == 1))
-        error = -4;
+        error = -4;\
+    else 
+    {
+if(error<0)
+error =-5;
+else error=5;
+
+    }
+
+        Serial.print("error= ");
+     Serial.println(error);
+     
+      
 }
 int calculatePID()
 {
@@ -109,8 +121,8 @@ void motorPIDcontrol()
     if (rsp > 150) rsp = 150;
     if (rsp < 60) rsp = 60;
     analogWrite(speedL, lsp);
-    Serial.print(rsp);
-    Serial.print("   ");
-    Serial.println(lsp);
+    // Serial.print(rsp);
+    // Serial.print("   ");
+    // Serial.println(lsp);
     analogWrite(speedR, rsp);
 }
