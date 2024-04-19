@@ -1,0 +1,10 @@
+^D:\2ND_TERM\EMBEDDED\MAZESOLVER-LINEFOLLOWER\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/2nd_term/embedded/MazeSolver-LineFollower -BD:/2nd_term/embedded/MazeSolver-LineFollower/build --check-stamp-file D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

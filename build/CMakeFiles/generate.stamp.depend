@@ -1,0 +1,35 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeCInformation.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeCXXInformation.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeCommonLanguageInclude.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeGenericSystem.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeInitializeConfigs.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeLanguageInformation.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeRCInformation.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeSystemSpecificInformation.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeSystemSpecificInitialize.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CPack.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CPackComponent.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Compiler/CMakeCommonCompilerMacros.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Compiler/MSVC-C.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Compiler/MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Compiler/MSVC.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/FindPackageMessage.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/Windows-Initialize.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/Windows-MSVC-C.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/Windows-MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/Windows-MSVC.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/Windows.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/WindowsPaths.cmake
+C:/Program Files/CMake/share/cmake-3.29/Templates/CPackConfig.cmake.in
+D:/2nd_term/embedded/MazeSolver-LineFollower/CMakeLists.txt
+D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/3.29.1/CMakeCCompiler.cmake
+D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/3.29.1/CMakeCXXCompiler.cmake
+D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/3.29.1/CMakeRCCompiler.cmake
+D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/3.29.1/CMakeSystem.cmake
+D:/opencv/build/x64/vc16/lib/OpenCVConfig-version.cmake
+D:/opencv/build/x64/vc16/lib/OpenCVConfig.cmake
+D:/opencv/build/x64/vc16/lib/OpenCVModules-debug.cmake
+D:/opencv/build/x64/vc16/lib/OpenCVModules-release.cmake
+D:/opencv/build/x64/vc16/lib/OpenCVModules.cmake

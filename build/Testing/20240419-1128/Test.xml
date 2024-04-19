@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Win32-MSBuild"
+	BuildStamp="20240419-1128-Experimental"
+	Name="DESKTOP-8GCF6K6"
+	Generator="ctest-3.29.1"
+	CompilerName="C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.33.31629/bin/Hostx86/x64/cl.exe"
+	CompilerVersion="19.33.31630.0"
+	OSName="Windows"
+	Hostname="DESKTOP-8GCF6K6"
+	OSRelease=" Personal"
+	OSVersion=" (Build 22631)"
+	OSPlatform="AMD64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="5"
+	ProcessorCacheSize="-1"
+	NumberOfLogicalCPU="16"
+	NumberOfPhysicalCPU="8"
+	TotalVirtualMemory="19486"
+	TotalPhysicalMemory="16158"
+	LogicalProcessorsPerPhysical="2"
+	ProcessorClockFrequency="2208"
+	>
+	<Testing>
+		<StartDateTime>Apr 19 13:29 Egypt Standard Time</StartDateTime>
+		<StartTestTime>1713526161</StartTestTime>
+		<TestList/>
+		<EndDateTime>Apr 19 13:29 Egypt Standard Time</EndDateTime>
+		<EndTestTime>1713526161</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>
