@@ -71,8 +71,8 @@ void loop()
     // Serial.println(timer0OVFCount);
     // PID gains and computation
     float kp = 2.0;
-    float kd = 0.0;
-    float ki = 0.0;
+    float kd = 1.0;
+    float ki = 1.0;
     int error=synchronizedTimer0Value-synchronizedTimer1Value;
     float u = pidController(error, kp, kd, ki);
     // Control motor 2 based on PID
