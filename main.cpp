@@ -169,8 +169,8 @@ bool draw(Mat image, Point2f frontrobotCenter, Point2f backrobotCenter)
     // Perform edge detection on the ROI (you may already have this step)
     Mat edges;
     Canny(roiImage, edges, 50, 150, 3);
-    // imshow("edges", edges);
-    // waitKey(0);
+    imshow("edges", edges);
+    waitKey(0);
     // Detect lines using the Probabilistic Hough Transform
     std::vector<Vec4i> lines;
     HoughLinesP(edges, lines, 1, CV_PI / 180, 50, 30, 10);
@@ -190,19 +190,19 @@ bool draw(Mat image, Point2f frontrobotCenter, Point2f backrobotCenter)
                 if (CalculateDistance(p2, p1) > 10)
                 {
                     speedup = true;
-                    line(image, p1, p2, Scalar(255, 255, 255), 2, LINE_AA);
+                    line(finalimage, p1, p2, Scalar(255, 255, 255), 2, LINE_AA);
                 }
             }
     }
 
     // Show the original image with the ROI and detected lines
     // rectangle(image, roiRect, Scalar(0, 255, 0), 2); // Draw ROI rectangle on original image
-    imshow("Original Image with ROI and Detected Lines", image);
+    imshow("Original Image with ROI and Detected Lines", finalimage);
     waitKey(0);
     return speedup;
 }
 
-void draw_angle(Mat image, Point2f frontrobotCenter, Point2f backrobotCenter)
+bool draw_angle(Mat image, Point2f frontrobotCenter, Point2f backrobotCenter)
 {
     Point2f directionVector = computeDirectionVector(backrobotCenter, frontrobotCenter);
 
@@ -212,30 +212,62 @@ void draw_angle(Mat image, Point2f frontrobotCenter, Point2f backrobotCenter)
     directionVector.y /= magnitude;
 
     // Scale the direction vector to set the dimensions of the ROI
-    int roiWidth = 500;
-    int roiHeight = 200;
+    int roiWidth = 300;
+    int roiHeight = 100;
+    if (directionVector.x < directionVector.y)
+    {
+        swap(roiHeight, roiWidth);
+    }
+    Point2f topLeft = frontrobotCenter;
+    if (frontrobotCenter.y == backrobotCenter.y && backrobotCenter.x > frontrobotCenter.x)
+    {
+        topLeft.x = frontrobotCenter.x - roiWidth;
+        topLeft.y = frontrobotCenter.y - roiHeight / 2;
+    }
+    else if (frontrobotCenter.y == backrobotCenter.y && backrobotCenter.x < frontrobotCenter.x)
+    {
+        topLeft.y = frontrobotCenter.y - roiHeight / 2;
+    }
+    else if (frontrobotCenter.x == backrobotCenter.x && backrobotCenter.y > frontrobotCenter.y)
+    {
+        topLeft.x = frontrobotCenter.x - roiWidth / 2;
+    }
+    else if (frontrobotCenter.x == backrobotCenter.x && backrobotCenter.y < frontrobotCenter.y)
+    {
+        topLeft.x = frontrobotCenter.x - roiWidth / 2;
+        topLeft.y = frontrobotCenter.y - roiHeight;
+    }
 
     // Adjust the width and height based on the direction vector
-    Point2f perpendicularVector = computePerpendicularVector(directionVector);
-    Point2f roiCenter = (frontrobotCenter + backrobotCenter) * 0.5;
-    Point2f topLeft = roiCenter - directionVector * roiWidth * 0.5 - perpendicularVector * roiHeight * 0.5;
-
-    // Define the region of interest (ROI) rectangle
+    // Point2f perpendicularVector = computePerpendicularVector(directionVector);
+    // Point2f roiCenter = (frontrobotCenter + backrobotCenter) * 0.5;
+    // Point2f topLeft = roiCenter - directionVector * roiWidth * 0.5 - perpendicularVector * roiHeight * 0.5;
+    if (topLeft.x < 0)
+        topLeft.x = 0;
+    if (topLeft.y < 0)
+        topLeft.y = 0;
+    if (topLeft.x > image.cols)
+        topLeft.x = image.cols;
+    if (topLeft.y > image.rows)
+        topLeft.y = image.rows;
+    // // Define the region of interest (ROI) rectangle
     Rect roiRect(topLeft.x, topLeft.y, roiWidth, roiHeight);
-
-    // Extract the region of interest from the original image
+    std::cout << "ROI rectangle" << roiRect << std::endl;
+    // // Extract the region of interest from the original image
     Mat roiImage = image(roiRect);
 
     // Perform edge detection on the ROI (you may already have this step)
     Mat edges;
     Canny(roiImage, edges, 50, 150, 3);
-
+    imshow("Original Image with ROI and Detected Lines", edges);
+    waitKey(0);
     // Detect lines using the Probabilistic Hough Transform
     std::vector<Vec4i> lines;
     HoughLinesP(edges, lines, 1, CV_PI / 180, 50, 30, 10);
     Mat finalimage(edges.size(), CV_8UC1, Scalar(0, 0, 0));
     float slope = calculateSlope(frontrobotCenter, backrobotCenter);
     // Draw the lines on the ROI image
+    bool speedup = false;
     for (size_t i = 0; i < lines.size(); i++)
     {
         Vec4i l = lines[i];
@@ -243,17 +275,14 @@ void draw_angle(Mat image, Point2f frontrobotCenter, Point2f backrobotCenter)
         Point p2 = Point(l[2], l[3]);
         float diff = abs(slope - calculateSlope(p1, p2));
         std::cout << diff << std::endl;
-        if (diff < 5)
+        if (diff < 1)
         {
-            std::cout << "in1" << std::endl;
             if (CalculateDistance(frontrobotCenter, p1) > CalculateDistance(backrobotCenter, p1))
             {
-                std::cout << "in2" << std::endl;
 
                 if (CalculateDistance(p2, p1) > 10)
                 {
-                    std::cout << "in3" << std::endl;
-
+                    speedup = true;
                     line(finalimage, p1, p2, Scalar(255, 255, 255), 2, LINE_AA);
                 }
             }
@@ -264,6 +293,7 @@ void draw_angle(Mat image, Point2f frontrobotCenter, Point2f backrobotCenter)
     // rectangle(image, roiRect, Scalar(0, 255, 0), 2); // Draw ROI rectangle on original image
     imshow("Original Image with ROI and Detected Lines", finalimage);
     waitKey(0);
+    return speedup;
 }
 int main(int, char **)
 {
@@ -287,12 +317,12 @@ int main(int, char **)
     // GaussianBlur(image, img_blur, Size(3, 3), 0);
     ///////////////////////////////////////////////////////
     Point2f frontrobotCenter = robotFront(image);
-
     Point2f backrobotCenter = robotBack(image);
     std::cout << "the robot front" << frontrobotCenter << "the back" << backrobotCenter << std::endl;
     ////////////////////////////////////robot front and back detected/////////////////////
-    if (draw(image, frontrobotCenter, backrobotCenter))
+    if (draw_angle(image, frontrobotCenter, backrobotCenter))
     {
+
         std::cout << "speed up" << std::endl;
     }
     else
