@@ -70,8 +70,8 @@ Point2f robotFront(Mat image)
     Mat mask;
 
     bitwise_or(mask1, mask2, mask);
-    // imshow("mask Image", mask);
-    // waitKey(0);
+    imshow("mask Image", mask);
+    waitKey(0);
 
     // Find contours in the red mask
     std::vector<std::vector<Point>> contours;
@@ -103,7 +103,7 @@ Point2f robotBack(Mat image)
 {
     Mat bimg;
     cvtColor(image, bimg, COLOR_BGR2HSV);
-    // Define the red color range in HSV
+    // Define the green  color range in HSV
     Scalar lower_green1 = Scalar(35, 50, 20);
     Scalar upper_green1 = Scalar(85, 255, 255);
 
@@ -120,8 +120,8 @@ Point2f robotBack(Mat image)
     Mat mask;
 
     bitwise_or(mask1, mask2, mask);
-    // imshow("mask Image", mask);
-    // waitKey(0);
+    imshow("mask Image", mask);
+    waitKey(0);
 
     // Find contours in the red mask
     std::vector<std::vector<Point>> contours;
@@ -246,10 +246,10 @@ bool draw_angle(Mat image, Point2f frontrobotCenter, Point2f backrobotCenter)
         topLeft.x = 0;
     if (topLeft.y < 0)
         topLeft.y = 0;
-    if (topLeft.x > image.cols)
-        topLeft.x = image.cols;
-    if (topLeft.y > image.rows)
-        topLeft.y = image.rows;
+    if (topLeft.x + roiWidth > image.cols)
+        topLeft.x = image.cols - roiWidth;
+    if (topLeft.y + roiHeight > image.rows)
+        topLeft.y = image.rows - roiHeight;
     // // Define the region of interest (ROI) rectangle
     Rect roiRect(topLeft.x, topLeft.y, roiWidth, roiHeight);
     std::cout << "ROI rectangle" << roiRect << std::endl;
@@ -298,7 +298,7 @@ bool draw_angle(Mat image, Point2f frontrobotCenter, Point2f backrobotCenter)
 int main(int, char **)
 {
 
-    std::string imagePath = "3.jpeg";
+    std::string imagePath = "2.jpeg";
     cv::Mat image = cv::imread(imagePath);
 
     if (image.empty())
@@ -320,7 +320,7 @@ int main(int, char **)
     Point2f backrobotCenter = robotBack(image);
     std::cout << "the robot front" << frontrobotCenter << "the back" << backrobotCenter << std::endl;
     ////////////////////////////////////robot front and back detected/////////////////////
-    if (draw_angle(image, frontrobotCenter, backrobotCenter))
+    if (draw(image, frontrobotCenter, backrobotCenter))
     {
 
         std::cout << "speed up" << std::endl;
