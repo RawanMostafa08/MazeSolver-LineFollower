@@ -56,6 +56,8 @@ Sensor  Array   Error Value
 1 1 0  -1
 1 0 0  -2
 */
+const int iniMotorPower = 250;
+const int adj = 0;
 float error=0, P=0, I=0, D=0, PIDvalue=0;
 float previousError=0, previousI=0;
 #define STOPPED 0
@@ -66,6 +68,10 @@ float previousError=0, previousI=0;
 #define RIGHT_TURN 5
 #define LEFT_TURN 6
 const int THRESHOLD = 150;
+// PID controller
+float Kp=50;
+float Ki=0;
+float Kd=0;
 //<---------------------------------------------------------Maze constants--------------------/>
 // IR sensors
 const int numSensors = 3;                  // Number of IR sensors
@@ -190,46 +196,7 @@ void readIR()
     sensorValues[i] = analogRead(sensorPins[i]);
   }
 }
-void loop()
-{
 
-  Read_IR_sensors();
-  // Serial.println(sensorValues[0]);
-  // Serial.println(sensorValues[1]);
-  // Serial.println(sensorValues[2]);
-  // if(sensorValues[0]<50){
-  //   // read sensor is right (3 right sensors are 1s)
-  //   forwardAction();
-  //   delay(50);
-  //   rightAction();
-  //   rightCond =true;
-  //   forwardCond=false;
-  //   leftCond=false;
-  //   //center == 1
-  // }else if (sensorValues[2]<50){
-  //   // read sensor is left (3 left sensors are 1s)
-  //   forwardAction();
-  //   delay(50);
-  //   leftAction();
-  //   rightCond =false;
-  //   forwardCond=false;
-  //   leftCond=true;
-  // }
-  // else if(sensorValues[1]<50){
-  //   forwardAction();
-  //   rightCond =false;
-  //   forwardCond=true;
-  //   leftCond=false;
-  // }else if(sensorValues[1]>200 && sensorValues[0]>200 && sensorValues[2]>200)
-  // {
-  //   if(forward)
-  //   forwardAction();
-  //   else if (right)
-  //   rightAction();
-  //   else if (left)
-  //   leftAction();
-  // }
-}
 void turn_exact()
 {
   getCurrentAngle();
@@ -631,9 +598,101 @@ void recIntersection(char direction)
 }
 void simplifyPath()
 {
-  //TODO
-  //Simplify the path
-  //
+  // only simplify the path if the second-to-last turn was a 'B'
+  if(pathLength < 3 || path[pathLength-2] != 'B')
+    return;
+
+  int totalAngle = 0;
+  int i;
+  for(i=1;i<=3;i++)
+  {
+    switch(path[pathLength-i])
+    {
+      case 'R':
+        totalAngle += 90;
+	break;
+      case 'L':
+	totalAngle += 270;
+	break;
+      case 'B':
+	totalAngle += 180;
+	break;
+    }
+  }
+
+  // Get the angle as a number between 0 and 360 degrees.
+  totalAngle = totalAngle % 360;
+
+  // Replace all of those turns with a single one.
+  switch(totalAngle)
+  {
+    case 0:
+	path[pathLength - 3] = 'S';
+	break;
+    case 90:
+	path[pathLength - 3] = 'R';
+	break;
+    case 180:
+	path[pathLength - 3] = 'B';
+	break;
+    case 270:
+	path[pathLength - 3] = 'L';
+	break;
+  }
+
+  // The path is now two steps shorter.
+  pathLength -= 2;
+  
+} 
+
+void mazeOptimization (void)
+{
+  while (!status)
+  {
+    Read_IR_sensors();  
+    switch (mode)
+    {
+      case FOLLOWING_LINE:
+        followingLine();
+        break;    
+      case CONT_LINE:
+        if (pathIndex >= pathLength) mazeEnd (); 
+        else {mazeTurn (path[pathIndex]); pathIndex++;}
+        break;  
+      case LEFT_TURN:
+        if (pathIndex >= pathLength) mazeEnd (); 
+        else {mazeTurn (path[pathIndex]); pathIndex++;}
+        break;  
+      case RIGHT_TURN:
+        if (pathIndex >= pathLength) mazeEnd (); 
+        else {mazeTurn (path[pathIndex]); pathIndex++;}
+        break;   
+    }    
+   }  
+}
+void mazeTurn (char dir) 
+{
+  switch(dir)
+  {
+    case 'L': // Turn Left
+       targetAngle=-90;
+       turn_exact(); 
+       break;   
+    case 'R': // Turn Right
+    targetAngle=90;
+    turn_exact();
+       break;   
+       
+    case 'B': // Turn Back
+    //<---------------------------------------------------------not sure about the degree-------------------->
+    targetAngle=180;
+    turn_exact();
+       break;   
+       
+    case 'S': // Go Straight
+       runExtraInch(); 
+       break;
+  }
 }
 void runExtraInch()// for the l before the turn
 {
@@ -643,12 +702,38 @@ void runExtraInch()// for the l before the turn
 }
 void motorPIDcontrol()
 {
-  //TO DO
+  
+  int leftMotorSpeed = 1500 - (iniMotorPower+adj) - PIDvalue;
+  int rightMotorSpeed = 1500 + iniMotorPower - PIDvalue;
+  
+  // The motor speed should not exceed the max PWM value
+   constrain(leftMotorSpeed, 1000, 2000);
+   constrain(rightMotorSpeed, 1000, 2000);
+  
+  leftSpeedVal=leftMotorSpeed;
+  rightSpeedVal=rightMotorSpeed;
+
+  
+  Serial.print (PIDvalue);
+  Serial.print (" ==> Left, Right:  ");
+  Serial.print (leftSpeedVal);
+  Serial.print ("   ");
+  Serial.println (rightSpeedVal);
 }
 void followingLine(void)
 {
-  //TO DO
-  //PID 
+   //readLFSsensors(); 
+   calculatePID();
+   motorPIDcontrol();   
+}
+
+void calculatePID()
+{
+  P = error;
+  I = I + error;
+  D = error-previousError;
+  PIDvalue = (Kp*P) + (Ki*I) + (Kd*D);
+  previousError = error;
 }
 
 void mazeEnd(void)
@@ -664,3 +749,26 @@ void mazeEnd(void)
   status = 1;
   mode = STOPPED;
 }
+void loop() 
+{
+  Serial.println("Start First Pass");
+  Read_IR_sensors();  
+  mazeSolve(); // First pass to solve the maze
+  Serial.println("End First Pass"); 
+  
+  
+  delay(5000);
+  Serial.println("Starting 2nd Pass"); 
+  pathIndex = 0;
+  status = 0;
+  mazeOptimization(); //run the maze as fast as possible
+  Serial.println("End 2nd Pass"); 
+  Serial.println("End 2nd Pass"); 
+  
+  mode = STOPPED;
+  status = 0; // 1st pass
+  pathIndex = 0;
+  pathLength = 0;
+}
+
+
