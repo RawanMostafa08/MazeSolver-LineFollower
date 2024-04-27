@@ -5,11 +5,11 @@
 #define TOGGLE_BIT(REG_NAME, BIT_NUMBER) REG_NAME ^= (1 << BIT_NUMBER)
 #define READ_BIT(REG_NAME, BIT_NUM) (REG_NAME >> BIT_NUM) & 1
 
-#define speedL 11
-#define IN1 8
-#define IN2 7
-#define IN3 6
-#define IN4 2
+#define speedL 11 
+#define IN1 7
+#define IN2 8
+#define IN3 2
+#define IN4 6
 #define speedR 10
 
 // #define turning_speed 80
@@ -17,12 +17,12 @@
 int P, D,I=0, previousError, PIDvalue;
 int lsp , rsp ;
 // int lfspeed = 80;
-int lfspeed = 80;
+int lfspeed = 70;
 // float Kp = 0.083;
 // float Kd = 0.23;
 // float Ki = 0;
 float Kp = 8;
-float Ki = 0.3;
+float Ki = 0;
 float Kd = 3;
 int error;
 int getError(int sensor1, int sensor2, int sensor3, int sensor4, int sensor5);
@@ -64,38 +64,37 @@ void loop()
 void calculateError(int sensor1, int sensor2, int sensor3, int sensor4, int sensor5)
 {
     if ((sensor1 == 1) && (sensor2 == 1) && (sensor3 == 1) && (sensor4 == 1) && (sensor5 == 0))
-        error = 4;
+        error = -4;
 
     else if ((sensor1 == 1) && (sensor2 == 1) && (sensor3 == 1) && (sensor4 == 0) && (sensor5 == 0))
-        error = 3;
+        error = -3;
 
     else if ((sensor1 == 1) && (sensor2 == 1) && (sensor3 == 1) && (sensor4 == 0) && (sensor5 == 1))
-        error = 2;
+        error = -2;
 
     else if ((sensor1 == 1) && (sensor2 == 1) && (sensor3 == 0) && (sensor4 == 0) && (sensor5 == 1))
-        error = 1;
+        error = -1;
 
     else if ((sensor1 == 1) && (sensor2 == 1) && (sensor3 == 0) && (sensor4 == 1) && (sensor5 == 1))
         error = 0;
-
     else if ((sensor1 == 1) && (sensor2 == 0) && (sensor3 == 0) && (sensor4 == 1) && (sensor5 == 1))
-        error = -1;
-
+        error = 1;
     else if ((sensor1 == 1) && (sensor2 == 0) && (sensor3 == 1) && (sensor4 == 1) && (sensor5 == 1))
-        error = -2;
-
+        error = 2;
     else if ((sensor1 == 0) && (sensor2 == 0) && (sensor3 == 1) && (sensor4 == 1) && (sensor5 == 1))
-        error = -3;
-
+        error = 3;
     else if ((sensor1 == 0) && (sensor2 == 1) && (sensor3 == 1) && (sensor4 == 1) && (sensor5 == 1))
-        error = -4;\
-    else 
-    {
-if(error<0)
-error =-5;
-else error=5;
+        error = 4;
+    // else if ((sensor1 == 1) && (sensor2 == 1) && (sensor3 == 1) && (sensor4 == 1) && (sensor5 == 1)) 
+    //     error=-5;
+    // error=-error;
+//     else 
+//     {
+// if(error<0)
+// error =-5;
+// else error=5;
 
-    }
+    // }
 
         Serial.print("error= ");
      Serial.println(error);
@@ -116,13 +115,17 @@ void motorPIDcontrol()
 {
     lsp = lfspeed + PIDvalue;
     rsp = lfspeed - PIDvalue; 
-    if (lsp > 150) lsp = 150;
-    if (lsp < 60) lsp = 60;
-    if (rsp > 150) rsp = 150;
-    if (rsp < 60) rsp = 60;
+    Serial.print("PIDvalue  ");
+    Serial.print(PIDvalue);
+    // if (lsp > 110) lsp = 110;
+    if (lsp < 70) lsp = 70;
+    // if (rsp > 110) rsp = 110;
+    if (rsp < 70) rsp = 70;
     analogWrite(speedL, lsp);
-    // Serial.print(rsp);
-    // Serial.print("   ");
-    // Serial.println(lsp);
+    Serial.print("lsp ");
+    Serial.print(lsp);
+    Serial.print("   ");
+    Serial.print("rsp ");
+    Serial.println(rsp);
     analogWrite(speedR, rsp);
 }

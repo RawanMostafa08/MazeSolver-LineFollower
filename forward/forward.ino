@@ -3,12 +3,12 @@
   // ENA -> d11
   // ENB -> d10
 
-#define enA 11
-#define enB 10
-#define in1 7
-#define in2 8
-#define in3 6
-#define in4 2
+#define enA 10 //right
+#define enB 11 //left
+#define in1 8 //right
+#define in2 7 //right
+#define in3 2 //left
+#define in4 6 //left
 
 void setup() {
   pinMode(enA, OUTPUT);

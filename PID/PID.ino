@@ -1,88 +1,227 @@
-// #define SET_BIT(REG_NAME, BIT_NUMBER) REG_NAME |= (1 << BIT_NUMBER)
-// #define CLEAR_BIT(REG_NAME, BIT_NUMBER) REG_NAME &= (~(1 << BIT_NUMBER))
-// #define TOGGLE_BIT(REG_NAME, BIT_NUMBER) REG_NAME ^= (1 << BIT_NUMBER)
-// #define READ_BIT(REG_NAME, BIT_NUM) (REG_NAME >> BIT_NUM) & 1
-// #include <avr/io.h>
-// #include <util/delay.h>
+/*
+ Sample Line Following Code for the Robojunkies LF-2 robot
+*/
 
-// //////////////////////////////////PID Values////////////////////////////////
-// // Kp as initial = Max Motor Speed / Max Error fl Line
-// double Kp, Ki, Kd;
-// double lastError = 0;
-// const int goal = 0;              // Center of the line
-// long sensor[] = {0, 1, 2, 3, 4}; // leftmost - 0, rightmost - 4
-
-// //////////////////////////////////Speeds////////////////////////////////
-// const unsigned char MAX_SPEED = 100;
-// int rspeed;
-// int lspeed;
-// void setup()
-// {
-//     // put your setup code here, to run once:
-//     Kp = 0.028;
-//     Kd = 0.2;
-// }
-
-// void loop()
-// {
-//     // put your main code here, to run repeatedly:
-//      sensor_average = 0;
-//      sensor_sum = 0;
-//      i = 0;
-//      for(int i = -2; i <= 2; i++)
-//      {
-//        sensor[i]=analogRead(i);
-//        sensor_average = sensor[i]*i*1000; //weighted mean
-//        sensor_sum += sensor[i];
-//      }
-//      int position = int(sensor_average / sensor_sum);
-//      int error = goal - position; // Calc Error 3500 - pos
-
-//     int error =               // sensor1 - sensor3;
-//         int PID = pid(error); // Calc PID value
-//     lastError = error;        // Make lastError with right error
-//     // Adjust Motors Now based on PID value
-//     // Speed One UP and Slow One Down
-//     //  SetMotor 1 Speed(constraint(MAX_SPEED+PID , 0 , MAX_SPEED));
-//     //  SetMotor 2 Speed(constraint(MAX_SPEED-PID , 0 , MAX_SPEED));
-//     lspeed = lspeed + PID;
-//     rspeed = rspeed - PID;
-//     if (lspeed > MAX_SPEED)
-//         lspeed = MAX_SPEED;
-//     if (lspeed < 0)
-//         lspeed = 0;
-//     if (rspeed > MAX_SPEED)
-//         rspeed = MAX_SPEED;
-//     if (rspeed < 0)
-//         rspeed = 0;
-//   analogWrite(  left motor , lspeed);
-//   analogWrite( right motor , rspeed);
-// }
-
-// double pid(double error)
-// {
-//     double derivative = error - lastError;
-//     double output = Kp * error + Kd * derivative; // Calc PID value
-//     return output;
-// }
+// Speed 100 , 150
+// kp =0.055
+// kd=0.2 --- 0.18  ---  0.15
 
 
+// Speed 100 , 15
+// kp =0.055
+// kd=0.2 --- 0.18  ---  0.15
+
+//Speed 120 - BATTERIES: 3.95 3.85
+//kp =0.075 ---- 0.065
+//kd = 0.3 --- 0.28   // 0.55
+
+// speed = 140
+// kp = 0.1
+// kd = 0
+
+///////////////////////// *********************************************** ////////////////////////////////
+// Speed 180
+// kp =0.073
+// kd=0.18 
+
+// Speed 100 , 150
+// kp =0.055
+// kd= 0.18
+
+
+// Speed 200
+// kp =0.093
+// kd=0.2
+
+
+///////////////////////// **********************3 batteries 11.3v************************* ////////////////////////////////
+
+// Speed 100 
+// kp =0.055
+// kd= 0.18
+
+// Speed 120 
+// kp = 0.075
+// kd= 0.18
+
+// Speed 150 
+// kp =0.13
+// kd= 0.215
+
+///////////////////////// **********************3 batteries 11.5v************************* ////////////////////////////////
+
+// Speed 150 
+// kp =0.085
+// kd= 0.18
+
+// Speed 120 
+// kp = 0.075
+// kd= 0.18
+
+
+///////////////////////// **********************3 batteries 11.3v************************* ////////////////////////////////
+
+
+// Speed 100 
+// kp =0.06
+// kd= 0.18
+
+// Speed 120 
+// kp = 0.085
+// kd= 0.18
+
+///////////////////////// **********************3 batteries 11.1v************************* ////////////////////////////////
+
+
+// Speed 100 
+// kp =0.07
+// kd= 0.18
+
+///////////////////////// **********************3 batteries 11.8v************************* ////////////////////////////////
+
+
+// Speed 100 
+// kp =0.055
+// kd= 0.18
+
+
+///////////////////////// ********************** SELKA ************************* ////////////////////////////////
+
+
+// Speed 100 
+// kp =0.075
+// kd= 0.18
+
+// Speed 120 
+// kp =0.095
+// kd= 0.18
+
+
+//int lfspeed = 150;
+//
+//float Kp = 0.15;
+//float Kd = 0.25;
+
+
+///////////////////////// ********************** 2 Batteries ==> men el driver 7.8 ************************* //////////////////////////////// 
+
+
+// Speed 200 
+// kp = 0.11
+// kd = 0.195
+
+// Speed 180 
+// kp = 0.095
+// kd = 0.18
+
+
+// Speed 150 
+// kp = 0.065
+// kd = 0.18
+
+// Speed 220 
+// kp = 0.14
+// kd = 0.195
+
+///////////////////////// ********************** 3 Batteries ==> men el driver 11.78 ************************* //////////////////////////////// 
+
+//int lfspeed = 90;
+//
+//float Kp = 0.075;
+//float Kd = 0.3;
+///////////////////
+//int lfspeed = 100;
+//float Kp = 0.0585;
+//float Kd = 0.185; 
+
+
+////////////////////////////
+//int lfspeed = 80;
+//float Kp = 0.0575; 
+//float Kd = 0.2; 
+
+//int lfspeed = 100;
+//float Kp = 0.0593; 
+//float Kd = 0.22;
+//lfspeed = 80; // in loop
+//delay(25);
 
 
 
+////////////////////////////////////////////////////////////integration with maazzeeedriver was 8.11 /////////////////////////////////////////////////////
+//int lfspeed = 80;
+//float Kp = 0.0575; 
+//float Kd = 0.2; 
+//tuen_speed = 80;
+
+
+//int lfspeed = 100;
+//float Kp = 0.059; 
+//float Kd = 0.2;
+//tuen_speed = 90;
+
+//int lfspeed = 120;
+//tune_speed=110;
+//float Kp = 0.0605; 
+//float Kd = 0.2;
+//float Ki = 0;
+
+//int lfspeed = 150;
+//tune_speed = 130;
+//float Kp = 0.0625; 
+//float Kd = 0.2;
+//float Ki = 0;
+
+
+////////////////////////////////////////////////////////////integration with maazzeeedriver was 4.01 4.01 4.1 /////////////////////////////////////////////////////
+//int lfspeed = 100;
+//float Kp = 0.059; 
+//float Kd = 0.2;
+//tuen_speed = 90;
+
+
+
+// tsleem day 
+//int lfspeed = 120, 180;
+//float Kp = 0.067; 
+//float Kd = 0.2;
+//int turn_speed = 100;
+
+//int lfspeed = 150;
+//float Kp = 0.082; 
+//float Kd = 0.2;
+
+
+
+
+
+
+
+
+// mine
+
+//int lfspeed = 120; // no delay with bluetooth bas tunning
+//float Kp = 0.06; 
+//float Kd = 0.23;
+//lfspeed = 100; // in loop
+
+//int lfspeed = 140;  // no bluetooth
+//float Kp = 0.064; 
+//float Kd = 0.23;
+//delay(25);
 
 #define speedL 11
 #define IN1 7
 #define IN2 8
-#define IN3 6
-#define IN4 5
+#define IN3 2
+#define IN4 6 
 #define speedR 10
 
 //#define turning_speed 80
 
 int P, D, previousError, PIDvalue, error;
 int lsp, rsp;      
-int lfspeed = 80;
+int lfspeed = 100;
 float Kp = 0.083; 
 float Kd = 0.23;
 float Ki = 0;
@@ -91,7 +230,12 @@ char data;
 
 void setup()
 {
-  DDRC &= ~(0x1F);
+  // DDRC &= ~(0x1F);
+   pinMode(A1, INPUT);
+    pinMode(A2, INPUT);
+    pinMode(A3, INPUT);
+    pinMode(A4, INPUT);
+    pinMode(A5, INPUT);
   previousError = 0;
   pinMode(speedL, OUTPUT);
   pinMode(IN1, OUTPUT);
@@ -116,13 +260,13 @@ void loop()
 void linefollow()
 {
 
-  int sensor1 = analogRead(A1); //most left
+  int sensor1 = analogRead(A1);
   int sensor2 = analogRead(A2);
   int sensor3 = analogRead(A3);
-  int sensor4 = analogRead(A4); 
-  int sensor5 = analogRead(A5); //most right
-   while( analogRead(A1) >= 200 && analogRead(A2) >= 200 && analogRead(A3) >= 200 && analogRead(A4) >= 200 && analogRead(A5) >= 200) {
-    int turn_speed = 120;
+  int sensor4 = analogRead(A4);
+  int sensor5 = analogRead(A5);
+  while(analogRead(A5) >= 200 && analogRead(A1) >= 200 && analogRead(A2) >= 200 && analogRead(A3) >= 200 && analogRead(A4) >= 200) {
+    int turn_speed = 80;
     error = previousError;
     P = error;
     D = error - previousError;
@@ -133,15 +277,13 @@ void linefollow()
     lsp = turn_speed + PIDvalue;
     rsp = turn_speed - PIDvalue;
   
-    if (lsp > 255) lsp = 255;
-    if (lsp < 0)   lsp = 0;
-    if (rsp > 255) rsp = 255;
-    if (rsp < 0)   rsp = 0;
+  if (lsp > 100) lsp = 100;
+  if (lsp < 0)   lsp = 0;
+  if (rsp > 100) rsp = 100;
+  if (rsp < 0)   rsp = 0;
     analogWrite(speedL, lsp);
     analogWrite(speedR, rsp);
   }
-Serial.println("sensor1: " + String(sensor1) + ", sensor2: " + String(sensor2) + ", sensor3: " + String(sensor2) + ", sensor4: " + String(sensor4) + ", sensor5: " + String(sensor5));
-
 //    Serial.flush();
   // if (sensor1 >= 500 and sensor2 >= 500 and sensor3 >= 500 and sensor4 >= 500 and sensor5 >= 500) {
   // brake();
@@ -163,6 +305,18 @@ Serial.println("sensor1: " + String(sensor1) + ", sensor2: " + String(sensor2) +
   if(error > 900) {
     error = 900;
   }
+  Serial.print("error  ");
+  Serial.print(error);
+  // Serial.print("  sensor1  ");
+  // Serial.print(sensor1);
+  // Serial.print("  sensor2  ");
+  // Serial.print(sensor2);
+  // Serial.print("  sensor3  ");
+  // Serial.print(sensor3);
+  // Serial.print("  sensor4  ");
+  // Serial.print(sensor4);
+  // Serial.print("  sensor5  ");
+  // Serial.println(sensor5);
 //  else if(error<15&&error>-15){ 
 //    if(Serial.available()){
 //      data=Serial.read();
@@ -184,13 +338,50 @@ Serial.println("sensor1: " + String(sensor1) + ", sensor2: " + String(sensor2) +
   lsp = lfspeed + PIDvalue;
   rsp = lfspeed - PIDvalue;
 
-  if (lsp > 255) lsp = 255;
+  if (lsp > 100) lsp = 100;
   if (lsp < 0)   lsp = 0;
-  if (rsp > 255) rsp = 255;
+  if (rsp > 100) rsp = 100;
   if (rsp < 0)   rsp = 0;
   analogWrite(speedL, lsp);
   analogWrite(speedR, rsp);
+
+  Serial.print("  speedL  ");
+  Serial.print(lsp);
+  Serial.print("  speedR  ");
+  Serial.println(rsp);
   delay(25);
 }
 
 
+
+
+
+
+//void brake() {
+// digitalWrite(IN1, HIGH); // make left motor A brake
+// digitalWrite(IN2, HIGH);
+// digitalWrite(IN3, HIGH); // make right motor B brake
+// digitalWrite(IN4, HIGH);
+//}
+
+//void setup_motors(int forward_a, int forward_b) {
+// if (forward_a == 1) {
+//  digitalWrite(IN1, LOW);
+//  digitalWrite(IN2, HIGH);
+// } else {
+//  digitalWrite(IN1, LOW);
+//  digitalWrite(IN2, LOW);
+// }
+// if (forward_b == 1) {
+//  digitalWrite(IN3, HIGH);
+//  digitalWrite(IN4, LOW);
+// } else {
+//  digitalWrite(IN3, LOW);
+//  digitalWrite(IN4, LOW);
+// }
+//}
+
+//void change_speed(int leftSpeed, int rightSpeed) {
+// analogWrite(speedR, rightSpeed); 
+// analogWrite(speedL, leftSpeed); 
+//}
