@@ -1,221 +1,9 @@
-/*
- Sample Line Following Code for the Robojunkies LF-2 robot
-*/
-
-// Speed 100 , 150
-// kp =0.055
-// kd=0.2 --- 0.18  ---  0.15
-
-
-// Speed 100 , 15
-// kp =0.055
-// kd=0.2 --- 0.18  ---  0.15
-
-//Speed 120 - BATTERIES: 3.95 3.85
-//kp =0.075 ---- 0.065
-//kd = 0.3 --- 0.28   // 0.55
-
-// speed = 140
-// kp = 0.1
-// kd = 0
-
-///////////////////////// *********************************************** ////////////////////////////////
-// Speed 180
-// kp =0.073
-// kd=0.18 
-
-// Speed 100 , 150
-// kp =0.055
-// kd= 0.18
-
-
-// Speed 200
-// kp =0.093
-// kd=0.2
-
-
-///////////////////////// **********************3 batteries 11.3v************************* ////////////////////////////////
-
-// Speed 100 
-// kp =0.055
-// kd= 0.18
-
-// Speed 120 
-// kp = 0.075
-// kd= 0.18
-
-// Speed 150 
-// kp =0.13
-// kd= 0.215
-
-///////////////////////// **********************3 batteries 11.5v************************* ////////////////////////////////
-
-// Speed 150 
-// kp =0.085
-// kd= 0.18
-
-// Speed 120 
-// kp = 0.075
-// kd= 0.18
-
-
-///////////////////////// **********************3 batteries 11.3v************************* ////////////////////////////////
-
-
-// Speed 100 
-// kp =0.06
-// kd= 0.18
-
-// Speed 120 
-// kp = 0.085
-// kd= 0.18
-
-///////////////////////// **********************3 batteries 11.1v************************* ////////////////////////////////
-
-
-// Speed 100 
-// kp =0.07
-// kd= 0.18
-
-///////////////////////// **********************3 batteries 11.8v************************* ////////////////////////////////
-
-
-// Speed 100 
-// kp =0.055
-// kd= 0.18
-
-
-///////////////////////// ********************** SELKA ************************* ////////////////////////////////
-
-
-// Speed 100 
-// kp =0.075
-// kd= 0.18
-
-// Speed 120 
-// kp =0.095
-// kd= 0.18
-
-
-//int lfspeed = 150;
-//
-//float Kp = 0.15;
-//float Kd = 0.25;
-
-
-///////////////////////// ********************** 2 Batteries ==> men el driver 7.8 ************************* //////////////////////////////// 
-
-
-// Speed 200 
-// kp = 0.11
-// kd = 0.195
-
-// Speed 180 
-// kp = 0.095
-// kd = 0.18
-
-
-// Speed 150 
-// kp = 0.065
-// kd = 0.18
-
-// Speed 220 
-// kp = 0.14
-// kd = 0.195
-
-///////////////////////// ********************** 3 Batteries ==> men el driver 11.78 ************************* //////////////////////////////// 
-
-//int lfspeed = 90;
-//
-//float Kp = 0.075;
-//float Kd = 0.3;
-///////////////////
-//int lfspeed = 100;
-//float Kp = 0.0585;
-//float Kd = 0.185; 
-
-
-////////////////////////////
-//int lfspeed = 80;
-//float Kp = 0.0575; 
-//float Kd = 0.2; 
-
-//int lfspeed = 100;
-//float Kp = 0.0593; 
-//float Kd = 0.22;
-//lfspeed = 80; // in loop
-//delay(25);
-
-
-
-////////////////////////////////////////////////////////////integration with maazzeeedriver was 8.11 /////////////////////////////////////////////////////
-//int lfspeed = 80;
-//float Kp = 0.0575; 
-//float Kd = 0.2; 
-//tuen_speed = 80;
-
-
-//int lfspeed = 100;
-//float Kp = 0.059; 
-//float Kd = 0.2;
-//tuen_speed = 90;
-
-//int lfspeed = 120;
-//tune_speed=110;
-//float Kp = 0.0605; 
-//float Kd = 0.2;
-//float Ki = 0;
-
-//int lfspeed = 150;
-//tune_speed = 130;
-//float Kp = 0.0625; 
-//float Kd = 0.2;
-//float Ki = 0;
-
-
-////////////////////////////////////////////////////////////integration with maazzeeedriver was 4.01 4.01 4.1 /////////////////////////////////////////////////////
-//int lfspeed = 100;
-//float Kp = 0.059; 
-//float Kd = 0.2;
-//tuen_speed = 90;
-
-
-
-// tsleem day 
-//int lfspeed = 120, 180;
-//float Kp = 0.067; 
-//float Kd = 0.2;
-//int turn_speed = 100;
-
-//int lfspeed = 150;
-//float Kp = 0.082; 
-//float Kd = 0.2;
-
-
-
-
-
-
-
-
-// mine
-
-//int lfspeed = 120; // no delay with bluetooth bas tunning
-//float Kp = 0.06; 
-//float Kd = 0.23;
-//lfspeed = 100; // in loop
-
-//int lfspeed = 140;  // no bluetooth
-//float Kp = 0.064; 
-//float Kd = 0.23;
-//delay(25);
-
-#define speedL 11
+#define speedR 10
 #define IN1 7
 #define IN2 8
 #define IN3 2
 #define IN4 6 
-#define speedR 10
+#define speedL 11
 
 //#define turning_speed 80
 
@@ -307,16 +95,16 @@ void linefollow()
   }
   Serial.print("error  ");
   Serial.print(error);
-  // Serial.print("  sensor1  ");
-  // Serial.print(sensor1);
-  // Serial.print("  sensor2  ");
-  // Serial.print(sensor2);
-  // Serial.print("  sensor3  ");
-  // Serial.print(sensor3);
-  // Serial.print("  sensor4  ");
-  // Serial.print(sensor4);
-  // Serial.print("  sensor5  ");
-  // Serial.println(sensor5);
+  Serial.print("  sensor1  ");
+  Serial.print(sensor1);
+  Serial.print("  sensor2  ");
+  Serial.print(sensor2);
+  Serial.print("  sensor3  ");
+  Serial.print(sensor3);
+  Serial.print("  sensor4  ");
+  Serial.print(sensor4);
+  Serial.print("  sensor5  ");
+  Serial.println(sensor5);
 //  else if(error<15&&error>-15){ 
 //    if(Serial.available()){
 //      data=Serial.read();

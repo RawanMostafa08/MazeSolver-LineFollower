@@ -5,10 +5,11 @@
 
 #define enA 10 //right
 #define enB 11 //left
-#define in1 8 //right
-#define in2 7 //right
+#define in1 7 //right
+#define in2 8 //right
 #define in3 2 //left
 #define in4 6 //left
+
 
 void setup() {
   pinMode(enA, OUTPUT);
@@ -30,8 +31,8 @@ void setup() {
   analogWrite(enA, pwmOutput); // Send PWM signal to L298N Enable pin
   analogWrite(enB, pwmOutput); // Send PWM signal to L298N Enable pin
 
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, HIGH);
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
   
   digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);
