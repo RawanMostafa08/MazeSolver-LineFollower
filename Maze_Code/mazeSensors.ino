@@ -1,12 +1,11 @@
-
-const int SensorPin0 = A5;
-const int SensorPin1 = A4;
+const int SensorPin0 = A1;
+const int SensorPin1 = A2;
 const int SensorPin2 = A3;
-const int SensorPin3 = A2;
-const int SensorPin4 = A1;
+const int SensorPin3 = A4;
+const int SensorPin4 = A5;
 
-const int BackSensor0 = A6;
-const int BackSensor1 = A7;
+const int BackSensor0 = 4;
+const int BackSensor1 = 3;
 
 const int leftSpeed = 11; // means pin 9 on the Arduino controls the speed of left motor
 const int rightSpeed = 10;
@@ -25,16 +24,13 @@ int extraInch = 200;
 int LFSensor[5] = {0, 0, 0, 0, 0};
 int BKSensor[2] = {0, 0};
 
+// #define turning_speed 80
 int P, D, I = 0, previousError, PIDvalue;
 int lsp, rsp;
-// int lfspeed = 80;
 int lfspeed = 80;
-// float Kp = 0.083;
-// float Kd = 0.23;
-// float Ki = 0;
-float Kp = 8;
-float Ki = 0.3;
-float Kd = 3;
+float Kp = 0.01;
+float Kd = 0.9;
+float Ki = 0;
 
 #define STOPPED 0
 #define FOLLOWING_LINE 1
@@ -42,6 +38,7 @@ float Kd = 3;
 #define CONT_LINE 3
 #define RIGHT_TURN 4
 #define LEFT_TURN 5
+int motorSpeed = 150;
 
 int mode = STOPPED;
 int status = false;
@@ -56,7 +53,7 @@ void readLightSensor()
 
 void readBackSensor()
 {
-    BkSensor[0] = !digitalRead(BackSensor0);
+    BKSensor[0] = !digitalRead(BackSensor0);
     BKSensor[1] = !digitalRead(BackSensor1);
 }
 
@@ -154,6 +151,52 @@ void Read_IR_sensors()
     Serial.print("  error:");
     Serial.println(error);
 }
+/////////////////////////////////////////////////////////////PID Code////////////////////////////////////////////////////
+void calculateError(int sensor1, int sensor2, int sensor3, int sensor4, int sensor5)
+{
+    error = (sensor5 + sensor4) - (sensor1 + sensor2);
+    if (error < 0)
+        error -= sensor3;
+    else
+        error += sensor3;
+    if (sensor1 < 100 && sensor2 > 200 && sensor3 > 200 && sensor4 > 200 && sensor5 > 200)
+        error += error;
+    if (sensor1 > 200 && sensor2 > 200 && sensor3 > 200 && sensor4 > 200 && sensor5 < 100)
+        error += error;
+
+    Serial.print("error= ");
+    Serial.println(error);
+}
+// void calculatePID() {
+//   P = error;
+//   I = I + error;
+//   D = error - previousError;
+//   PIDvalue = (Kp * P) + (Ki * I) + (Kd * D);
+//   previousError = error;
+// }
+void motorPIDcontrol()
+{
+    lsp = lfspeed + PIDvalue;
+    rsp = lfspeed - PIDvalue;
+    Serial.print("PIDvalue  ");
+    Serial.print(PIDvalue);
+    if (lsp > 150)
+        lsp = 150;
+    if (lsp < 0)
+        lsp = 0;
+    if (rsp > 150)
+        rsp = 150;
+    if (rsp < 0)
+        rsp = 0;
+    analogWrite(leftSpeed, lsp);
+    analogWrite(rightSpeed, rsp);
+    Serial.print("lsp ");
+    Serial.print(lsp);
+    Serial.print("   ");
+    Serial.print("rsp ");
+    Serial.println(rsp);
+}
+/////////////////////////////////////////////////////////////PID Code////////////////////////////////////////////////////
 
 void setup()
 {
@@ -193,32 +236,32 @@ void forward()
     digitalWrite(in2, LOW);
     digitalWrite(in3, HIGH);
     digitalWrite(in4, LOW);
-
-    analogWrite(rightSpeed, 80);
-    analogWrite(leftSpeed, 80);
+    calculateError(LFSensor[0], LFSensor[1], LFSensor[2], LFSensor[3], LFSensor[4]);
+    calculatePID();
+    motorPIDcontrol();
     Serial.print("in forward");
 }
 
-void left()
+void left(int speed)
 { // rotates the car left, assuming speed leftSpeedVal and rightSpeedVal are set high enough
     digitalWrite(in1, HIGH);
     digitalWrite(in2, LOW);
     digitalWrite(in3, LOW);
     digitalWrite(in4, LOW);
-    analogWrite(rightSpeed, 80);
-    analogWrite(leftSpeed, 80);
+    analogWrite(rightSpeed, speed);
+    analogWrite(leftSpeed, speed);
     Serial.print("in left");
 }
 
-void right()
+void right(int speed)
 {
     digitalWrite(in1, LOW);
     digitalWrite(in2, LOW);
     digitalWrite(in3, HIGH);
     digitalWrite(in4, LOW);
 
-    analogWrite(rightSpeed, 80);
-    analogWrite(leftSpeed, 80);
+    analogWrite(rightSpeed, speed);
+    analogWrite(leftSpeed, speed);
 }
 
 void waitBefore()
@@ -238,6 +281,7 @@ void waitAfter()
 }
 void mazeSolve()
 {
+
     // Serial.println("In Maze");
     while (!status) // it does not reach the end
     {
@@ -246,43 +290,57 @@ void mazeSolve()
         Serial.println(mode);
 
         Read_IR_sensors();
+
+        // calculatePID();
+        // motorPIDcontrol();
         switch (mode)
         {
         case NO_LINE:
             Serial.println("NO_LINE");
-            waitBefore();
-            left();
-            delay(500);
+            stopCar();
+            left(80);
 
             break;
 
         case CONT_LINE:
             Serial.println("CONT_LINE");
-            waitBefore();
-            left();
-            delay(500);
+            stopCar();
+            left(80);
             break;
 
         case RIGHT_TURN:
             Serial.println("RIGHT_TURN");
             // wait for 2 sensor at least one
-            waitBefore();
-            right();
+            stopCar();
+            right(80);
+            // while(mode!-23){
+            //   Read_IR_sensors();
 
-            delay(500);
+            // }
+            // delay(75);
             break;
 
         case LEFT_TURN:
-            Serial.println("LEFT_TURN");
-            waitBefore();
-            left();
-            delay(500);
+            // Serial.println("LEFT_TURN");
+            stopCar();
+            left(80);
+            // delay(75);
             break;
 
         case FOLLOWING_LINE:
             Serial.println("Forward");
             forward();
+            break;
+
+            // if(error<0)
+            // left();
+            // else if (error >0)
+            // right();
+            // else
+            // forward();
         }
+        Serial.print("error : ");
+        Serial.println(error);
     }
 }
 
@@ -296,24 +354,20 @@ int calculatePID()
     return PIDvalue;
 }
 
-void motorPIDcontrol()
-{
-    lsp = lfspeed + PIDvalue;
-    rsp = lfspeed - PIDvalue;
-    if (lsp > 150)
-        lsp = 150;
-    if (lsp < 60)
-        lsp = 60;
-    if (rsp > 150)
-        rsp = 150;
-    if (rsp < 60)
-        rsp = 60;
-    analogWrite(leftSpeed, lsp);
-    Serial.print(rsp);
-    Serial.print("   ");
-    Serial.println(lsp);
-    analogWrite(rightSpeed, rsp);
-}
+// void motorPIDcontrol()
+// {
+//     lsp = lfspeed + PIDvalue;
+//     rsp = lfspeed - PIDvalue;
+//     if (lsp > 150) lsp = 150;
+//     if (lsp < 60) lsp = 60;
+//     if (rsp > 150) rsp = 150;
+//     if (rsp < 60) rsp = 60;
+//     analogWrite(leftSpeed, lsp);
+//     Serial.print(rsp);
+//     Serial.print("   ");
+//     Serial.println(lsp);
+//     analogWrite(rightSpeed, rsp);
+// }
 
 void runExtraInch(void)
 {
