@@ -1,475 +1,520 @@
-#include <Wire.h>
-// control pins for left and right motors
+const int SensorPin0 = A1;
+const int SensorPin1 = A2;
+const int SensorPin2 = A3;
+const int SensorPin3 = A4;
+const int SensorPin4 = A5;
+
+const int BackSensor0 = 4;
+const int BackSensor1 = 3;
+
 const int leftSpeed = 11; // means pin 9 on the Arduino controls the speed of left motor
 const int rightSpeed = 10;
-const int left1 = 8;
-const int left2 = 7; // left 1 and left 2 control the direction of rotation of left motor
-const int right1 = 6;
-const int right2 = 2;
-//<---------------------------------------------------------Maze constants-------------------->
-const int lineFollowSensor0 = A3;
-const int lineFollowSensor1 = A2;
-const int lineFollowSensor2 = A7;
-// will  be modified
-const int lineFollowSensor3 = 12;
-const int lineFollowSensor4 = 13;
-int LFSensor[5] = {0, 0, 0, 0, 0};
-int mode = 0;
-unsigned int status = 0; // solving = 0; reach end = 1
-int extraInch = 200;
-//-------------------------------------------------
-// Specific Maze Phase 2 (optimization) definitions and variables
+const int in1 = 7; // in1
+const int in2 = 8; // in2
 
-unsigned char dir;
-
-// The path variable will store the path that the robot has taken:
-//  'L' for left
-//  'R' for right
-//  'S' for straight (going straight through an intersection)
-//  'B' for back (U-turn)
+// left 1 and left 2 control the direction of rotation of left motor
+const int in3 = 2; // in3
+const int in4 = 6; // in4
 
 char path[100] = "";
 unsigned char pathLength = 0; // the length of the path
 int pathIndex = 0;
-/* read line sensors values
+int error = 0;
+int extraInch = 200;
+int LFSensor[5] = {0, 0, 0, 0, 0};
+int BKSensor[2] = {0, 0};
 
-Sensor Array 	Error Value
-0 0 0 0 1	 4
-0 0 0 1 1	 3
-0 0 0 1 0	 2
-0 0 1 1 0	 1
-0 0 1 0 0	 0
-0 1 1 0 0	-1
-0 1 0 0 0	-2
-1 1 0 0 0	-3
-1 0 0 0 0	-4
+// #define turning_speed 80
+int P, D, I = 0, previousError, PIDvalue;
+int lsp, rsp;
+int lfspeed = 80;
+// float Kp = 0.01;
+// float Kd = 0.9;
+// float Ki = 0;
+float Kp = 0.05;
+float Kd = 0;
+float Ki = 0.05;
 
-1 1 1 1 1        0 Robot found continuous line - test if an intersection or end of maze
-0 0 0 0 0        0 Robot found no line: turn 180o
-*/
-
-/*
-Sensor  Array   Error Value
-0 0 1   2
-0 1 1   1
-0 1 0   0
-1 1 0  -1
-1 0 0  -2
-*/
-const int iniMotorPower = 250;
-const int adj = 0;
-float error = 0, P = 0, I = 0, D = 0, PIDvalue = 0;
-float previouserror = 0, previousI = 0;
 #define STOPPED 0
 #define FOLLOWING_LINE 1
 #define NO_LINE 2
 #define CONT_LINE 3
-#define POS_LINE 4
-#define RIGHT_TURN 5
-#define LEFT_TURN 6
-const int THRESHOLD = 150;
-// PID controller
-float Kp = 50;
-float Ki = 0;
-float Kd = 0;
-//<---------------------------------------------------------Maze constants--------------------/>
-// IR sensors
-const int numSensors = 3;                  // Number of IR sensors
-int sensorPins[numSensors] = {A7, A3, A2}; // Digital pins for sensors
-int sensorValues[numSensors];              // Array to store sensor readings
+#define RIGHT_TURN 4
+#define LEFT_TURN 5
+int motorSpeed = 150;
 
-const int MPU = 0x68;                                           // MPU6050 I2C address
-float AccX, AccY, AccZ;                                         // linear acceleration
-float GyroX, GyroY, GyroZ;                                      // angular velocity
-float accAngleX, accAngleY, gyroAngleX, gyroAngleY, gyroAngleZ; // used in void loop()
-float roll, pitch, yaw;
-float AccErrorX, AccErrorY, GyroErrorX, GyroErrorY, GyroErrorZ;
-float elapsedTime, currentTime, previousTime;
-int c = 0;
-int turned = false;
-const int maxSpeed = 100; // max PWM value written to motor speed pin. It is typically 255.
-const int minSpeed = 50;  // min PWM value at which motor moves
-float angle;              // due to how I orientated my MPU6050 on my car, angle = roll
-float targetAngle = 0;
-int equilibriumSpeed = 248; // rough estimate of PWM at the speed pin of the stronger motor, while driving straight
-// and weaker motor at maxSpeed
-int leftSpeedVal;
-int rightSpeedVal;
-bool isDriving = false;    // it the car driving forward OR rotate/stationary
-bool prevIsDriving = true; // equals isDriving in the previous iteration of void loop()
-bool paused = false;       // is the program paused
-bool forwardCond = false;
-bool rightCond = false;
-bool leftCond = false;
-bool reached = false;
+int mode = STOPPED;
+int status = false;
+void calculateError_LF(int sensor1, int sensor2, int sensor3, int sensor4, int sensor5)
+{
+    error = (sensor5 + sensor4) - (sensor1 + sensor2);
+    if (error < 0)
+        error -= sensor3;
+    else
+        error += sensor3;
+    if (sensor1 < 100 && sensor2 > 200 && sensor3 > 200 && sensor4 > 200 && sensor5 > 200)
+        error += error;
+    if (sensor1 > 200 && sensor2 > 200 && sensor3 > 200 && sensor4 > 200 && sensor5 < 100)
+        error += error;
+
+    Serial.print("error= ");
+    Serial.println(error);
+}
+void calculatePID_LF()
+{
+    P = error;
+    I = I + error;
+    D = error - previousError;
+    PIDvalue = (Kp * P) + (Ki * I) + (Kd * D);
+    previousError = error;
+}
+void motorPIDcontrol_LF()
+{
+    lsp = lfspeed + PIDvalue;
+    rsp = lfspeed - PIDvalue;
+    Serial.print("PIDvalue  ");
+    Serial.print(PIDvalue);
+    if (lsp > 255)
+        lsp = 255;
+    if (lsp < 0)
+        lsp = 0;
+    if (rsp > 255)
+        rsp = 255;
+    if (rsp < 0)
+        rsp = 0;
+    analogWrite(leftSpeed, lsp);
+    analogWrite(rightSpeed, rsp);
+    Serial.print("lsp ");
+    Serial.print(lsp);
+    Serial.print("   ");
+    Serial.print("rsp ");
+    Serial.println(rsp);
+}
+void readLightSensor()
+{
+    LFSensor[0] = !digitalRead(SensorPin0);
+    LFSensor[1] = !digitalRead(SensorPin1);
+    LFSensor[2] = !digitalRead(SensorPin2);
+    LFSensor[3] = !digitalRead(SensorPin3);
+    LFSensor[4] = !digitalRead(SensorPin4);
+}
+
+void readBackSensor()
+{
+    BKSensor[0] = !digitalRead(BackSensor0);
+    BKSensor[1] = !digitalRead(BackSensor1);
+}
+
+void testSensorValues()
+{
+    Serial.print(LFSensor[0]);
+    Serial.print(" ");
+    Serial.print(LFSensor[1]);
+    Serial.print(" ");
+    Serial.print(LFSensor[2]);
+    Serial.print(" ");
+    Serial.print(LFSensor[3]);
+    Serial.print(" ");
+    Serial.println(LFSensor[4]);
+}
+
+void Read_IR_sensors()
+{
+    readLightSensor();
+    // leftState=digitalRead(leftSensor);
+    // rightState = digitalRead(rightSensor);
+
+    testSensorValues();
+    // far right sensor LFSensor[4]
+    // far left sensor LFSensor[0]
+    if (LFSensor[0] && LFSensor[1] && LFSensor[2] && LFSensor[3] && LFSensor[4])
+    {
+        // 11111
+
+        mode = CONT_LINE;
+
+        error = 0;
+    }
+    else if (!LFSensor[0] && LFSensor[4])
+    {
+        // 0XXX1
+        mode = RIGHT_TURN;
+        error = 0;
+    }
+    else if (LFSensor[0] && !LFSensor[4])
+    {
+        // 1XXX0
+        mode = LEFT_TURN;
+        error = 0;
+    }
+    else if (!LFSensor[0] && !LFSensor[1] && !LFSensor[2] && !LFSensor[3] && !LFSensor[4])
+    {
+        // 00000
+        mode = NO_LINE;
+        Serial.print("hi   ");
+        Serial.println(mode);
+        error = 0;
+    }
+    else if (!LFSensor[0] && !LFSensor[1] && !LFSensor[2] && LFSensor[3] && !LFSensor[4])
+    {
+        // Sensor Value
+        // 0 0 0 1 0   2
+        mode = FOLLOWING_LINE;
+        error = 2;
+    }
+    else if (!LFSensor[0] && !LFSensor[1] && LFSensor[2] && LFSensor[3] && !LFSensor[4])
+    {
+        // Sensor Value
+        // 0 0 1 1 0
+        mode = FOLLOWING_LINE;
+        error = 1;
+    }
+    else if (!LFSensor[0] && !LFSensor[1] && LFSensor[2] && !LFSensor[3] && !LFSensor[4])
+    {
+        // 0 0 1 0 0
+        mode = FOLLOWING_LINE;
+        error = 0;
+    }
+    else if (!LFSensor[0] && LFSensor[1] && LFSensor[2] && !LFSensor[3] && !LFSensor[4])
+    {
+        // 0 1 1 0 0 -1
+        mode = FOLLOWING_LINE;
+        error = -1;
+    }
+    else if (!LFSensor[0] && LFSensor[1] && !LFSensor[2] && !LFSensor[3] && !LFSensor[4])
+    {
+        // 0 1 0 0 0  -2
+        mode = FOLLOWING_LINE;
+        error = -2;
+    }
+    Serial.print("  mode: ");
+    Serial.print(mode);
+    Serial.print("  error:");
+    Serial.println(error);
+}
+/////////////////////////////////////////////////////////////PID Code////////////////////////////////////////////////////
+// void calculateError(int sensor1, int sensor2, int sensor3, int sensor4, int sensor5) {
+//   error = (sensor5 + sensor4) - (sensor1 + sensor2);
+//   if (error < 0)
+//     error -= sensor3;
+//   else error += sensor3;
+//   if (sensor1 < 100 && sensor2 > 200 && sensor3 > 200 && sensor4 > 200 && sensor5 > 200)
+//     error += error;
+//   if (sensor1 > 200 && sensor2 > 200 && sensor3 > 200 && sensor4 > 200 && sensor5 < 100)
+//     error += error;
+
+//   Serial.print("error= ");
+//   Serial.println(error);
+// }
+// void calculatePID() {
+//   P = error;
+//   I = I + error;
+//   D = error - previousError;
+//   PIDvalue = (Kp * P) + (Ki * I) + (Kd * D);
+//   previousError = error;
+// }
+// void motorPIDcontrol() {
+//   lsp = lfspeed + PIDvalue;
+//   rsp = lfspeed - PIDvalue;
+//   Serial.print("PIDvalue  ");
+//   Serial.print(PIDvalue);
+//   if (lsp > 100) lsp = 100;
+//   if (lsp < 60) lsp = 60;
+//   if (rsp > 100) rsp = 100;
+//   if (rsp < 60) rsp = 60;
+//   analogWrite(leftSpeed, lsp);
+//   analogWrite(rightSpeed, rsp);
+//   Serial.print("lsp ");
+//   Serial.print(lsp);
+//   Serial.print("   ");
+//   Serial.print("rsp ");
+//   Serial.println(rsp);
+// }
+/////////////////////////////////////////////////////////////PID Code////////////////////////////////////////////////////
+
 void setup()
 {
     Serial.begin(9600);
-    Wire.begin();                // Initialize comunication
-    Wire.beginTransmission(MPU); // Start communication with MPU6050 // MPU=0x68
-    Wire.write(0x6B);            // Talk to the register 6B
-    Wire.write(0x00);            // Make reset - place a 0 into the 6B register
-    Wire.endTransmission(true);  // end the transmission
-    // Call this function if you need to get the IMU error values for your module
-    calculateError();
-    delay(20);
-    pinMode(left1, OUTPUT);
-    pinMode(left2, OUTPUT);
-    pinMode(right1, OUTPUT);
-    pinMode(right2, OUTPUT);
+    pinMode(SensorPin0, INPUT);
+    pinMode(SensorPin1, INPUT);
+    pinMode(SensorPin2, INPUT);
+    pinMode(SensorPin3, INPUT);
+    pinMode(SensorPin4, INPUT);
+
+    pinMode(BackSensor0, INPUT);
+    pinMode(BackSensor1, INPUT);
+
+    pinMode(in1, OUTPUT);
+    pinMode(in2, OUTPUT);
+    pinMode(in3, OUTPUT);
+    pinMode(in4, OUTPUT);
     pinMode(leftSpeed, OUTPUT);
     pinMode(rightSpeed, OUTPUT);
-
-    for (int i = 0; i < numSensors; i++)
-    {
-        pinMode(sensorPins[i], INPUT); // Set sensor pins as input
-    }
-    currentTime = micros();
-
-    stopCar();
-    delay(3000);
-    // analogWrite(rightSpeed, 100);
-    // analogWrite(leftSpeed, 100);
-}
-void getCurrentAngle()
-{
-    // === Read accelerometer (on the MPU6050) data === //
-    readAcceleration();
-    // Calculating Roll and Pitch from the accelerometer data
-    accAngleX = (atan(AccY / sqrt(pow(AccX, 2) + pow(AccZ, 2))) * 180 / PI) - AccErrorX; // AccErrorX is calculated in the calculateError() function
-    accAngleY = (atan(-1 * AccX / sqrt(pow(AccY, 2) + pow(AccZ, 2))) * 180 / PI) - AccErrorY;
-
-    // === Read gyroscope (on the MPU6050) data === //
-    previousTime = currentTime;
-    currentTime = micros();
-    elapsedTime = (currentTime - previousTime) / 1000000; // Divide by 1000 to get seconds
-    readGyro();
-    // Correct the outputs with the calculated error values
-    GyroX -= GyroErrorX; // GyroErrorX is calculated in the calculateError() function
-    GyroY -= GyroErrorY;
-    GyroZ -= GyroErrorZ;
-    // Currently the raw values are in degrees per seconds, deg/s, so we need to multiply by sendonds (s) to get the angle in degrees
-    gyroAngleX += GyroX * elapsedTime; // deg/s * s = deg
-    gyroAngleY += GyroY * elapsedTime;
-    yaw += GyroZ * elapsedTime;
-    // combine accelerometer- and gyro-estimated angle values. 0.96 and 0.04 values are determined through trial and error by other people
-    roll = 0.99 * gyroAngleX + 0.01 * accAngleX;
-    pitch = 0.99 * gyroAngleY + 0.01 * accAngleY;
-    angle = roll; // if you mounted MPU6050 in a different orientation to me, angle may not = roll. It can roll, pitch, yaw or minus version of the three
-                  // for me, turning right reduces angle. Turning left increases angle.
-}
-
-void forwardAction()
-{
-    // drive forward
-    Serial.println("forward");
-    isDriving = true;
-}
-void rightAction()
-{
-    // turn right
-    turned = true;
-    Serial.println("right");
-    targetAngle -= 90;
-    if (targetAngle <= -180)
-    {
-        targetAngle += 360;
-    }
-    isDriving = false;
-}
-void leftAction()
-{
-    // turn left
-    Serial.println("left");
-    targetAngle += 90;
-    if (targetAngle > 180)
-    {
-        targetAngle -= 360;
-    }
-    isDriving = false;
-}
-void stopAction()
-{
-    // stop or brake
-    Serial.println("stop");
-    isDriving = false;
-}
-void turn_exact()
-{
-    while (!reached)
-    {
-        getCurrentAngle();
-
-        static int countStraight;
-        int count = 0;
-        while (count < 6)
-            count++;
-        if (isDriving != prevIsDriving)
-        {
-            leftSpeedVal = equilibriumSpeed;
-            countStraight = 0;
-            Serial.print("mode changed, isDriving: ");
-            Serial.println(isDriving);
-        }
-        if (isDriving)
-        {
-            if (abs(targetAngle - angle) < 3)
-            {
-                if (countStraight < 20)
-                {
-                    countStraight++;
-                }
-                else
-                {
-                    countStraight = 0;
-                    equilibriumSpeed = leftSpeedVal; // to find equilibrium speed, 20 consecutive readings need to indicate car is going straight
-                    Serial.print("EQUILIBRIUM reached, equilibriumSpeed: ");
-                    Serial.println(equilibriumSpeed);
-                }
-            }
-            else
-            {
-                countStraight = 0;
-            }
-            driving();
-        }
-        else
-        {
-            rotate();
-        }
-        prevIsDriving = isDriving;
-
-        Serial.print("angle : ");
-        Serial.println(angle);
-    }
-}
-void driving()
-{                                                // called by void loop(), which isDriving = true
-    int deltaAngle = round(targetAngle - angle); // rounding is neccessary, since you never get exact values in reality
-    forward();
-    if (deltaAngle != 0)
-    {
-        controlSpeed();
-        rightSpeedVal = maxSpeed;
-        analogWrite(rightSpeed, rightSpeedVal);
-        analogWrite(leftSpeed, leftSpeedVal);
-    }
-}
-
-void controlSpeed()
-{ // this function is called by driving ()
-    int deltaAngle = round(targetAngle - angle);
-    int targetGyroX;
-
-    // setting up propoertional control, see Step 3 on the website
-    if (deltaAngle > 30)
-    {
-        targetGyroX = 60;
-    }
-    else if (deltaAngle < -30)
-    {
-        targetGyroX = -60;
-    }
-    else
-    {
-        targetGyroX = 2 * deltaAngle;
-    }
-
-    if (round(targetGyroX - GyroX) == 0)
-    {
-        ;
-    }
-    else if (targetGyroX > GyroX)
-    {
-        leftSpeedVal = changeSpeed(leftSpeedVal, -1); // would increase GyroX
-    }
-    else
-    {
-        leftSpeedVal = changeSpeed(leftSpeedVal, +1);
-    }
-}
-
-void rotate()
-{ // called by void loop(), which isDriving = false
-    int deltaAngle = round(targetAngle - angle);
-    int targetGyroX;
-    if (abs(deltaAngle) <= 1)
-    {
-        reached = true;
-        Serial.println("reeeeeeeeeeeeeeeeeeeeeeeeeeaaachedddddddddddddddddddddddddd!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
-        stopCar();
-    }
-    else
-    {
-        if (angle < targetAngle)
-        { // turn left
-            left();
-        }
-        else if (angle > targetAngle)
-        { // turn right
-            right();
-        }
-
-        // setting up propoertional control, see Step 3 on the website
-        if (abs(deltaAngle) > 30)
-        {
-            targetGyroX = 60;
-        }
-        else
-        {
-            targetGyroX = 2 * abs(deltaAngle);
-        }
-
-        if (round(targetGyroX - abs(GyroX)) == 0)
-        {
-            ;
-        }
-        else if (targetGyroX > abs(GyroX))
-        {
-            leftSpeedVal = changeSpeed(leftSpeedVal, +1); // would increase abs(GyroX)
-        }
-        else
-        {
-            leftSpeedVal = changeSpeed(leftSpeedVal, -1);
-        }
-        rightSpeedVal = leftSpeedVal;
-        analogWrite(rightSpeed, rightSpeedVal);
-        analogWrite(leftSpeed, leftSpeedVal);
-    }
-}
-
-int changeSpeed(int motorSpeed, int increment)
-{
-    motorSpeed += increment;
-    if (motorSpeed > maxSpeed)
-    { // to prevent motorSpeed from exceeding 255, which is a problem when using analogWrite
-        motorSpeed = maxSpeed;
-    }
-    else if (motorSpeed < minSpeed)
-    {
-        motorSpeed = minSpeed;
-    }
-    return motorSpeed;
-}
-
-void calculateError()
-{
-    // When this function is called, ensure the car is stationary. See Step 2 for more info
-
-    // Read accelerometer values 200 times
-    c = 0;
-    while (c < 300)
-    {
-        readAcceleration();
-        // Sum all readings
-        AccErrorX += (atan((AccY) / sqrt(pow((AccX), 2) + pow((AccZ), 2))) * 180 / PI);
-        AccErrorY += (atan(-1 * (AccX) / sqrt(pow((AccY), 2) + pow((AccZ), 2))) * 180 / PI);
-        c++;
-    }
-    // Divide the sum by 1000 to get the error value, since expected value of reading is zero
-    AccErrorX = AccErrorX / 300;
-    AccErrorY = AccErrorY / 300;
-    c = 0;
-
-    // Read gyro values 1000 times
-    while (c < 300)
-    {
-        readGyro();
-        // Sum all readings
-        GyroErrorX += GyroX;
-        GyroErrorY += GyroY;
-        GyroErrorZ += GyroZ;
-        c++;
-    }
-    // Divide the sum by 1000 to get the error value
-    GyroErrorX = GyroErrorX / 300;
-    GyroErrorY = GyroErrorY / 300;
-    GyroErrorZ = GyroErrorZ / 300;
-    Serial.print("angle: ");
-    Serial.println(angle);
-    Serial.println("The the gryoscope setting in MPU6050 has been calibrated");
-}
-
-void readAcceleration()
-{
-    Wire.beginTransmission(MPU);
-    Wire.write(0x3B); // Start with register 0x3B (ACCEL_XOUT_H)
-    Wire.endTransmission(false);
-    Wire.requestFrom(MPU, 6, true); // Read 6 registers total, each axis value is stored in 2 registers
-    // For a range of +-2g, we need to divide the raw values by 16384, according to the MPU6050 datasheet
-    AccX = (Wire.read() << 8 | Wire.read()) / 16384.0; // X-axis value
-    AccY = (Wire.read() << 8 | Wire.read()) / 16384.0; // Y-axis value
-    AccZ = (Wire.read() << 8 | Wire.read()) / 16384.0; // Z-axis value
-                                                       // Serial.print("AccX");
-                                                       // Serial.println(AccX);
-                                                       // Serial.print("AccY");
-                                                       // Serial.println(AccY);
-                                                       // Serial.print("AccZ");
-                                                       // Serial.println(AccZ);
-}
-
-void readGyro()
-{
-    Wire.beginTransmission(MPU);
-    Wire.write(0x43);
-    Wire.endTransmission(false);
-    Wire.requestFrom(MPU, 6, true);
-    GyroX = (Wire.read() << 8 | Wire.read()) / 131.0;
-    GyroY = (Wire.read() << 8 | Wire.read()) / 131.0;
-    GyroZ = (Wire.read() << 8 | Wire.read()) / 131.0;
-    // Serial.print("GyroX");
-    // Serial.println(GyroX);
-    // Serial.print("GyroY");
-    // Serial.println(GyroY);
-    // Serial.print("GyroZ");
-    // Serial.println(GyroZ);
 }
 
 void stopCar()
 {
-    digitalWrite(right1, LOW);
-    digitalWrite(right2, LOW);
-    digitalWrite(left1, LOW);
-    digitalWrite(left2, LOW);
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, LOW);
     analogWrite(rightSpeed, 0);
     analogWrite(leftSpeed, 0);
 }
 
 void forward()
-{                               // drives the car forward, assuming leftSpeedVal and rightSpeedVal are set high enough
-    digitalWrite(right1, HIGH); // the right motor rotates FORWARDS when right1 is HIGH and right2 is LOW
-    digitalWrite(right2, LOW);
-    digitalWrite(left1, HIGH);
-    digitalWrite(left2, LOW);
+{ // drives the car forward, assuming leftSpeedVal and rightSpeedVal are set high enough
+
+    // the right motor rotates FORWARDS when right1 is HIGH and right2 is LOW
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, HIGH);
+    digitalWrite(in4, LOW);
+    // calculateError(LFSensor[0], LFSensor[1], LFSensor[2], LFSensor[3], LFSensor[4]);
+    calculateError_LF(LFSensor[0], LFSensor[1], LFSensor[2], LFSensor[3], LFSensor[4]);
+    calculatePID_LF();
+    motorPIDcontrol_LF();
+    Serial.print("in forward");
 }
 
-void right()
+void left(int speed)
 { // rotates the car left, assuming speed leftSpeedVal and rightSpeedVal are set high enough
-    digitalWrite(right1, LOW);
-    digitalWrite(right2, HIGH);
-    digitalWrite(left1, HIGH);
-    digitalWrite(left2, LOW);
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, HIGH);
+    analogWrite(rightSpeed, speed);
+    analogWrite(leftSpeed, speed);
+    Serial.print("in left");
 }
 
-void left()
+void right(int speed)
 {
-    digitalWrite(right1, HIGH);
-    digitalWrite(right2, LOW);
-    digitalWrite(left1, LOW);
-    digitalWrite(left2, HIGH);
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, HIGH);
+    digitalWrite(in3, HIGH);
+    digitalWrite(in4, LOW);
+
+    analogWrite(rightSpeed, speed);
+    analogWrite(leftSpeed, speed);
 }
+
+void waitBefore()
+{
+    while (BKSensor[0] && BKSensor[1])
+    {
+        readBackSensor();
+    }
+}
+
+void waitAfter()
+{
+    while (BKSensor[0] && BKSensor[1])
+    {
+        readBackSensor();
+    }
+}
+void mazeSolve()
+{
+
+    // Serial.println("In Maze");
+    while (!status) // it does not reach the end
+    {
+        // Serial.println("In status");
+        Serial.print("Mode");
+        Serial.println(mode);
+
+        Read_IR_sensors();
+
+        // calculatePID();
+        // motorPIDcontrol();
+        switch (mode)
+        {
+        case NO_LINE:
+            Serial.println("NO_LINE");
+
+            left(80);
+            while (mode != FOLLOWING_LINE)
+            {
+                Read_IR_sensors();
+            }
+
+            break;
+
+        case CONT_LINE:
+            Serial.println("CONT_LINE");
+            left(80);
+            delay(50);
+            while (mode != FOLLOWING_LINE)
+            {
+                Read_IR_sensors();
+            }
+            break;
+
+        case RIGHT_TURN:
+            Serial.println("RIGHT_TURN");
+            // wait for 2 sensor at least one
+            right(80);
+            delay(50);
+            while (mode != FOLLOWING_LINE)
+            {
+                Read_IR_sensors();
+            }
+            // while(mode!-23){
+            //   Read_IR_sensors();
+
+            // }
+            // delay(75);
+            break;
+
+        case LEFT_TURN:
+            Serial.println("LEFT_TURN");
+
+            left(80);
+            delay(50);
+            while (mode != FOLLOWING_LINE)
+            {
+                Read_IR_sensors();
+            }
+            // delay(75);
+            break;
+
+        case FOLLOWING_LINE:
+            Serial.println("Forward");
+            forward();
+            break;
+
+            // if(error<0)
+            // left();
+            // else if (error >0)
+            // right();
+            // else
+            // forward();
+        }
+        Serial.print("error : ");
+        Serial.println(error);
+    }
+}
+
+// int calculatePID() {
+//   P = error;
+//   I = I + error;
+//   D = error - previousError;
+//   PIDvalue = (Kp * P) + (Ki * I) + (Kd * D);
+//   previousError = error;
+//   return PIDvalue;
+// }
+
+// void motorPIDcontrol()
+// {
+//     lsp = lfspeed + PIDvalue;
+//     rsp = lfspeed - PIDvalue;
+//     if (lsp > 150) lsp = 150;
+//     if (lsp < 60) lsp = 60;
+//     if (rsp > 150) rsp = 150;
+//     if (rsp < 60) rsp = 60;
+//     analogWrite(leftSpeed, lsp);
+//     Serial.print(rsp);
+//     Serial.print("   ");
+//     Serial.println(lsp);
+//     analogWrite(rightSpeed, rsp);
+// }
+
+// void runExtraInch(void) {
+//   motorPIDcontrol();
+//   delay(extraInch);
+//   stopCar();
+// }
+// void recIntersection(char direction) {
+//   path[pathLength] = direction;  // Store the intersection in the path variable.
+//   pathLength++;
+//   // simplifyPath(); // Simplify the learned path.
+// }
+
+void followingLine(void)
+{
+    // readLFSsensors();
+    calculatePID();
+    motorPIDcontrol();
+}
+
+//----------------------------------------------
+void mazeEnd(void)
+{
+    stopCar();
+    for (int i = 0; i < pathLength; i++)
+        Serial.print(path[i]);
+    // Serial.print(path[i]);
+    Serial.print("  pathLenght ==> ");
+    Serial.println(pathLength);
+    status = 1;
+    mode = STOPPED;
+}
+
+// void mazeSolve(void)
+// {
+//     while (!status)
+//     {
+//         Read_IR_sensors();
+//         switch (mode)
+//         {
+//           case NO_LINE:
+//             stopCar();
+//             // left();
+//              Serial.println("no line");
+//             // goAndTurn (LEFT, 180);
+//             recIntersection('B');
+//             break;
+
+//           case CONT_LINE:
+//             // runExtraInch();
+//             Read_IR_sensors();
+//             if (mode != CONT_LINE)
+//             {
+//                Serial.println("cont line");
+//               // left();
+//               // goAndTurn (LEFT, 90);
+//               recIntersection('L');
+//               } // or it is a "T" or "Cross"). In both cases, goes to LEFT
+//             else mazeEnd();
+//             break;
+
+//          case RIGHT_TURN:
+//             // runExtraInch();
+//             Read_IR_sensors();
+//             if (mode == NO_LINE)
+//             {
+//               // goAndTurn (RIGHT, 90);
+//               stopCar();
+//               right();
+//               recIntersection('R');
+//               }
+//             else recIntersection('S');
+//             break;
+
+//          case LEFT_TURN:
+//             // goAndTurn (LEFT, 90);
+//             // left();
+//             Serial.println("turning left");
+//             recIntersection('L');
+//             break;
+
+//          case FOLLOWING_LINE:
+//             followingLine();
+//             break;
+
+//          }
+//     }
+// }
+
 void loop()
 {
+    // left();
+    // right();
     // forward();
     // delay(1000);
-    targetAngle = -90;
-    turn_exact();
-    reached = false;
-    // forward();
-    //  delay(10000);
-    // targetAngle=-90;
-    // turn_exact();
-    // reached=false;
-    stopCar();
-    delay(3000);
+    // stopCar();
+    // readLightSensor();
+    // testSensorValues();
+    mazeSolve();
 }
