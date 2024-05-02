@@ -4,8 +4,8 @@ const int SensorPin2 = A3;
 const int SensorPin3 = A4;
 const int SensorPin4 = A5;
 
-const int BackSensor0 = 4;
-const int BackSensor1 = 3;
+const int BackSensor0 = 4;  // left
+const int BackSensor1 = 3;  // right
 
 
 
@@ -49,14 +49,14 @@ int mode = STOPPED;
 int status = false;
 void calculateError_LF(int sensor1, int sensor2, int sensor3, int sensor4, int sensor5) {
   error = (sensor5 + sensor4) - (sensor1 + sensor2);
-  if(error<0)
-  error-=sensor3;
-  else error+=sensor3;
-  if(sensor1<100 && sensor2>200 && sensor3>200 && sensor4>200 && sensor5>200) 
-  error+=error;
-  if (sensor1>200 && sensor2>200 && sensor3>200 && sensor4>200 && sensor5<100)
-  error+=error;
-  
+  if (error < 0)
+    error -= sensor3;
+  else error += sensor3;
+  if (sensor1 < 100 && sensor2 > 200 && sensor3 > 200 && sensor4 > 200 && sensor5 > 200)
+    error += error;
+  if (sensor1 > 200 && sensor2 > 200 && sensor3 > 200 && sensor4 > 200 && sensor5 < 100)
+    error += error;
+
   Serial.print("error= ");
   Serial.println(error);
 }
@@ -93,8 +93,8 @@ void readLightSensor() {
 }
 
 void readBackSensor() {
-  BKSensor[0] = !digitalRead(BackSensor0);
-  BKSensor[1] = !digitalRead(BackSensor1);
+  BKSensor[0] = !digitalRead(BackSensor0);  // left
+  BKSensor[1] = !digitalRead(BackSensor1);  // right
 }
 
 void testSensorValues() {
@@ -163,45 +163,7 @@ void Read_IR_sensors() {
   Serial.print("  error:");
   Serial.println(error);
 }
-/////////////////////////////////////////////////////////////PID Code////////////////////////////////////////////////////
-// void calculateError(int sensor1, int sensor2, int sensor3, int sensor4, int sensor5) {
-//   error = (sensor5 + sensor4) - (sensor1 + sensor2);
-//   if (error < 0)
-//     error -= sensor3;
-//   else error += sensor3;
-//   if (sensor1 < 100 && sensor2 > 200 && sensor3 > 200 && sensor4 > 200 && sensor5 > 200)
-//     error += error;
-//   if (sensor1 > 200 && sensor2 > 200 && sensor3 > 200 && sensor4 > 200 && sensor5 < 100)
-//     error += error;
 
-//   Serial.print("error= ");
-//   Serial.println(error);
-// }
-// void calculatePID() {
-//   P = error;
-//   I = I + error;
-//   D = error - previousError;
-//   PIDvalue = (Kp * P) + (Ki * I) + (Kd * D);
-//   previousError = error;
-// }
-// void motorPIDcontrol() {
-//   lsp = lfspeed + PIDvalue;
-//   rsp = lfspeed - PIDvalue;
-//   Serial.print("PIDvalue  ");
-//   Serial.print(PIDvalue);
-//   if (lsp > 100) lsp = 100;
-//   if (lsp < 60) lsp = 60;
-//   if (rsp > 100) rsp = 100;
-//   if (rsp < 60) rsp = 60;
-//   analogWrite(leftSpeed, lsp);
-//   analogWrite(rightSpeed, rsp);
-//   Serial.print("lsp ");
-//   Serial.print(lsp);
-//   Serial.print("   ");
-//   Serial.print("rsp ");
-//   Serial.println(rsp);
-// }
-/////////////////////////////////////////////////////////////PID Code////////////////////////////////////////////////////
 
 void setup() {
   Serial.begin(9600);
@@ -295,61 +257,63 @@ void mazeSolve() {
     switch (mode) {
       case NO_LINE:
         Serial.println("NO_LINE");
-     
-        left(80);
-        while(mode!=FOLLOWING_LINE){
-          Read_IR_sensors();
-        }   
 
+        left(80);
+        delay(50);
+        while (mode != FOLLOWING_LINE) {
+          Read_IR_sensors();
+        }
+        // recIntersection('B');
         break;
 
       case CONT_LINE:
         Serial.println("CONT_LINE");
+
+        while (BKSensor[0] != 0) {  //0 -> there is left turn
+          readBackSensor();
+        }
         left(80);
         delay(50);
-        while(mode!=FOLLOWING_LINE){
+        while (mode != FOLLOWING_LINE) {
           Read_IR_sensors();
-        }   
+        }
+        // recIntersection('L');
         break;
 
       case RIGHT_TURN:
         Serial.println("RIGHT_TURN");
         // wait for 2 sensor at least one
+
+        while (BKSensor[1] != 0) {  //0 -> there is right turn
+          readBackSensor();
+        }
         right(80);
         delay(50);
-        while(mode!=FOLLOWING_LINE){
+        while (mode != FOLLOWING_LINE) {
           Read_IR_sensors();
         }
-        // while(mode!-23){
-        //   Read_IR_sensors();
-
-        // }
-        // delay(75);
+        // recIntersection('R');
         break;
 
       case LEFT_TURN:
         Serial.println("LEFT_TURN");
 
+
+        while (BKSensor[0] != 0) {  //0 -> there is left turn
+          readBackSensor();
+        }
         left(80);
         delay(50);
-        while(mode!=FOLLOWING_LINE){
+        while (mode != FOLLOWING_LINE) {
           Read_IR_sensors();
         }
-        // delay(75);
+        // recIntersection('S');
         break;
-
       case FOLLOWING_LINE:
         Serial.println("Forward");
         forward();
+        // recIntersection('L');
         break;
-
-
-        // if(error<0)
-        // left();
-        // else if (error >0)
-        // right();
-        // else
-        // forward();
     }
     Serial.print("error : ");
     Serial.println(error);
@@ -358,122 +322,144 @@ void mazeSolve() {
 
 
 
-// int calculatePID() {
-//   P = error;
-//   I = I + error;
-//   D = error - previousError;
-//   PIDvalue = (Kp * P) + (Ki * I) + (Kd * D);
-//   previousError = error;
-//   return PIDvalue;
-// }
 
-// void motorPIDcontrol()
-// {
-//     lsp = lfspeed + PIDvalue;
-//     rsp = lfspeed - PIDvalue;
-//     if (lsp > 150) lsp = 150;
-//     if (lsp < 60) lsp = 60;
-//     if (rsp > 150) rsp = 150;
-//     if (rsp < 60) rsp = 60;
-//     analogWrite(leftSpeed, lsp);
-//     Serial.print(rsp);
-//     Serial.print("   ");
-//     Serial.println(lsp);
-//     analogWrite(rightSpeed, rsp);
-// }
 
-// void runExtraInch(void) {
-//   motorPIDcontrol();
-//   delay(extraInch);
-//   stopCar();
-// }
-// void recIntersection(char direction) {
-//   path[pathLength] = direction;  // Store the intersection in the path variable.
-//   pathLength++;
-//   // simplifyPath(); // Simplify the learned path.
-// }
-
-// void followingLine(void) {
-//   //readLFSsensors();
-//   calculatePID();
-//   motorPIDcontrol();
-// }
-
-//----------------------------------------------
-void mazeEnd(void) {
-  stopCar();
-  for (int i = 0; i < pathLength; i++)
-    Serial.print(path[i]);
-  //Serial.print(path[i]);
-  Serial.print("  pathLenght ==> ");
-  Serial.println(pathLength);
-  status = 1;
-  mode = STOPPED;
+////////////////////////////////////////////////Maze Code/////////////////////////////////////////////////////////
+void recIntersection(char direction) {
+  path[pathLength] = direction;  // Store the intersection in the path variable.
+  pathLength++;
+  simplifyPath();  // Simplify the learned path.
 }
 
-// void mazeSolve(void)
-// {
-//     while (!status)
-//     {
-//         Read_IR_sensors();
-//         switch (mode)
-//         {
-//           case NO_LINE:
-//             stopCar();
-//             // left();
-//              Serial.println("no line");
-//             // goAndTurn (LEFT, 180);
-//             recIntersection('B');
-//             break;
+void simplifyPath() {
+  // only simplify the path if the second-to-last turn was a 'B'
+  if (pathLength < 3 || path[pathLength - 2] != 'B')
+    return;
 
-//           case CONT_LINE:
-//             // runExtraInch();
-//             Read_IR_sensors();
-//             if (mode != CONT_LINE)
-//             {
-//                Serial.println("cont line");
-//               // left();
-//               // goAndTurn (LEFT, 90);
-//               recIntersection('L');
-//               } // or it is a "T" or "Cross"). In both cases, goes to LEFT
-//             else mazeEnd();
-//             break;
-
-//          case RIGHT_TURN:
-//             // runExtraInch();
-//             Read_IR_sensors();
-//             if (mode == NO_LINE)
-//             {
-//               // goAndTurn (RIGHT, 90);
-//               stopCar();
-//               right();
-//               recIntersection('R');
-//               }
-//             else recIntersection('S');
-//             break;
-
-//          case LEFT_TURN:
-//             // goAndTurn (LEFT, 90);
-//             // left();
-//             Serial.println("turning left");
-//             recIntersection('L');
-//             break;
-
-//          case FOLLOWING_LINE:
-//             followingLine();
-//             break;
-
-//          }
-//     }
-// }
-
-void loop() {
-  // left();
-  // right();
-  // forward();
-  // delay(1000);
-  // stopCar();
-  // readLightSensor();
-  // testSensorValues();
-  mazeSolve();
+  int totalAngle = 0;
+  int i;
+  for (i = 1; i <= 3; i++) {
+    switch (path[pathLength - i]) {
+      case 'R':
+        totalAngle += 90;
+        break;
+      case 'L':
+        totalAngle += 270;
+        break;
+      case 'B':
+        totalAngle += 180;
+        break;
+    }
+  }
 }
+  void mazeOptimization(void) {
+    while (!status) {
+      Read_IR_sensors();
+      switch (mode) {
+        case FOLLOWING_LINE:
+          forward();
+          break;
+        case CONT_LINE:
+          if (pathIndex >= pathLength)
+            mazeEnd();
+          else {
+            mazeTurn(path[pathIndex]);
+            pathIndex++;
+          }
+          break;
+        case LEFT_TURN:
+          if (pathIndex >= pathLength)
+            mazeEnd();
+          else {
+            mazeTurn(path[pathIndex]);
+            pathIndex++;
+          }
+          break;
+        case RIGHT_TURN:
+          if (pathIndex >= pathLength)
+            mazeEnd();
+          else {
+            mazeTurn(path[pathIndex]);
+            pathIndex++;
+          }
+          break;
+      }
+    }
+  }
+  void mazeEnd(void) {
+    stopCar();
+    Serial.println("The End  ==> Path: ");
+    for (int i = 0; i < pathLength; i++)
+      Serial.print(path[i]);
+    // Serial.print(path[i]);
+    Serial.println("");
+    Serial.print("  pathLenght ==> ");
+    Serial.println(pathLength);
+    status = 1;
+    mode = STOPPED;
+  }
+  void mazeTurn(char dir) {
+    switch (dir) {
+      case 'L':  // Turn Left
+        Serial.println("LEFT_TURN");
+
+
+        while (BKSensor[0] != 0) {  //0 -> there is left turn
+          readBackSensor();
+        }
+        left(80);
+        delay(50);
+        while (mode != FOLLOWING_LINE) {
+          Read_IR_sensors();
+        }
+        break;
+      case 'R':  // Turn Right
+        Serial.println("LEFT_TURN");
+
+        while (BKSensor[1] != 0) {  //0 -> there is left turn
+          readBackSensor();
+        }
+        right(80);
+        delay(50);
+        while (mode != FOLLOWING_LINE) {
+          Read_IR_sensors();
+        }
+        break;
+      case 'B':  // Turn Back
+        Serial.println("LEFT_TURN");
+
+        while (BKSensor[0] != 0) {  //0 -> there is left turn
+          readBackSensor();
+        }
+        left(80);
+        delay(50);
+        while (mode != FOLLOWING_LINE) {
+          Read_IR_sensors();
+        }
+        // recIntersection('S');
+        break;
+      case 'S':  // Go Straight
+        forward();
+        break;
+    }
+  }
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  void loop() {
+    Serial.println("Start First Pass");
+    mazeSolve();  // First pass to solve the maze
+    Serial.println("End First Pass");
+
+    // delay(5000);
+    // Serial.println("Starting 2nd Pass");
+    // pathIndex = 0;
+    // status = 0;
+    // mazeOptimization(); // run the maze as fast as possible
+    // Serial.println("End 2nd Pass");
+
+    // mode = STOPPED;
+    // status = 0; // 1st pass
+    // pathIndex = 0;
+    // pathLength = 0;
+  }
