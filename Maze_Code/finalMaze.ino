@@ -1,8 +1,8 @@
-const int SensorPin0 = A1;
-const int SensorPin1 = A2;
+const int SensorPin0 = A5;
+const int SensorPin1 = A4;
 const int SensorPin2 = A3;
-const int SensorPin3 = A4;
-const int SensorPin4 = A5;
+const int SensorPin3 = A2;
+const int SensorPin4 = A1;
 
 const int BackSensor0 = 4; // left
 const int BackSensor1 = 3; // right
@@ -13,27 +13,28 @@ const int in1 = 7; // in1
 const int in2 = 8; // in2
 
 // left 1 and left 2 control the direction of rotation of left motor
-const int in3 = 2; // in3
-const int in4 = 6; // in4
+const int in3 = 6; // in3
+const int in4 = 2; // in4
 
 char path[100] = "";
 unsigned char pathLength = 0; // the length of the path
 int pathIndex = 0;
 int error = 0;
 int extraInch = 200;
+int LFSensorAnalog[5] = {0, 0, 0, 0, 0};
 int LFSensor[5] = {0, 0, 0, 0, 0};
 int BKSensor[2] = {0, 0};
 
 // #define turning_speed 80
 int P, D, I = 0, previousError, PIDvalue;
 int lsp, rsp;
-int lfspeed = 150;
+int lfspeed = 40;
 // float Kp = 0.01;
 // float Kd = 0.9;
 // float Ki = 0;
-float Kp = 0.03;
-float Kd = 0.2;
-float Ki = 0;
+float Kp = 0.008;
+float Kd = 0.0;
+float Ki = 0.0;
 
 #define STOPPED 0
 #define FOLLOWING_LINE 1
@@ -46,7 +47,7 @@ int mode = STOPPED;
 int status = false;
 void calculateError_LF(int sensor1, int sensor2, int sensor3, int sensor4, int sensor5)
 {
-    error = (sensor5 + sensor4) - (sensor1 + sensor2);
+    error = (sensor1 + sensor2) - (sensor5 + sensor4);
     if (error < 0)
         error -= sensor3;
     else
@@ -73,12 +74,12 @@ void motorPIDcontrol_LF()
     rsp = lfspeed - PIDvalue;
     Serial.print("PIDvalue  ");
     Serial.print(PIDvalue);
-    if (lsp > 200)
-        lsp = 200;
+    if (lsp > 255)
+        lsp = 255;
     if (lsp < 0)
         lsp = 0;
-    if (rsp > 200)
-        rsp = 200;
+    if (rsp > 255)
+        rsp = 255;
     if (rsp < 0)
         rsp = 0;
     analogWrite(leftSpeed, lsp);
@@ -97,11 +98,19 @@ void readLightSensor()
     LFSensor[3] = !digitalRead(SensorPin3);
     LFSensor[4] = !digitalRead(SensorPin4);
 }
+void readLightSensorAnalog()
+{
+    LFSensorAnalog[0] = analogRead(SensorPin0);
+    LFSensorAnalog[1] = analogRead(SensorPin1);
+    LFSensorAnalog[2] = analogRead(SensorPin2);
+    LFSensorAnalog[3] = analogRead(SensorPin3);
+    LFSensorAnalog[4] = analogRead(SensorPin4);
+}
 
 void readBackSensor()
 {
-    BKSensor[0] = !digitalRead(BackSensor0); // left
-    BKSensor[1] = !digitalRead(BackSensor1); // right
+    BKSensor[0] = digitalRead(BackSensor0); // left
+    BKSensor[1] = digitalRead(BackSensor1); // right
 }
 
 void testSensorValues()
@@ -115,6 +124,10 @@ void testSensorValues()
     Serial.print(LFSensor[3]);
     Serial.print(" ");
     Serial.println(LFSensor[4]);
+
+    Serial.print(BKSensor[0]);
+    Serial.print(" ");
+    Serial.println(BKSensor[1]);
 }
 
 void Read_IR_sensors()
@@ -132,57 +145,57 @@ void Read_IR_sensors()
 
         mode = CONT_LINE;
 
-        error = 0;
+        // error = 0;
     }
-    else if (!LFSensor[0] && LFSensor[4])
+    else if (!LFSensor[0] && LFSensor[2] && LFSensor[3] && LFSensor[4])
     {
         // 0XXX1
         mode = RIGHT_TURN;
-        error = 0;
+        // error = 0;
     }
-    else if (LFSensor[0] && !LFSensor[4])
+    else if (LFSensor[0] && LFSensor[1] && LFSensor[2] && !LFSensor[4])
     {
         // 1XXX0
         mode = LEFT_TURN;
-        error = 0;
+        // error = 0;
     }
     else if (!LFSensor[0] && !LFSensor[1] && !LFSensor[2] && !LFSensor[3] && !LFSensor[4])
     {
         // 00000
         mode = NO_LINE;
-        error = 0;
+        // error = 0;
     }
     else if (!LFSensor[0] && !LFSensor[1] && !LFSensor[2] && LFSensor[3] && !LFSensor[4])
     {
         // Sensor Value
         // 0 0 0 1 0   2
         mode = FOLLOWING_LINE;
-        error = 2;
+        // error = 2;
     }
     else if (!LFSensor[0] && !LFSensor[1] && LFSensor[2] && LFSensor[3] && !LFSensor[4])
     {
         // Sensor Value
         // 0 0 1 1 0
         mode = FOLLOWING_LINE;
-        error = 1;
+        // error = 1;
     }
     else if (!LFSensor[0] && !LFSensor[1] && LFSensor[2] && !LFSensor[3] && !LFSensor[4])
     {
         // 0 0 1 0 0
         mode = FOLLOWING_LINE;
-        error = 0;
+        // error = 0;
     }
     else if (!LFSensor[0] && LFSensor[1] && LFSensor[2] && !LFSensor[3] && !LFSensor[4])
     {
         // 0 1 1 0 0 -1
         mode = FOLLOWING_LINE;
-        error = -1;
+        // error = -1;
     }
     else if (!LFSensor[0] && LFSensor[1] && !LFSensor[2] && !LFSensor[3] && !LFSensor[4])
     {
         // 0 1 0 0 0  -2
         mode = FOLLOWING_LINE;
-        error = -2;
+        // error = -2;
     }
     Serial.print("  mode: ");
     Serial.print(mode);
@@ -229,7 +242,18 @@ void forward()
     digitalWrite(in3, HIGH);
     digitalWrite(in4, LOW);
     // calculateError(LFSensor[0], LFSensor[1], LFSensor[2], LFSensor[3], LFSensor[4]);
-    calculateError_LF(LFSensor[0], LFSensor[1], LFSensor[2], LFSensor[3], LFSensor[4]);
+    readLightSensorAnalog();
+    Serial.print(LFSensorAnalog[0]);
+    Serial.print(" ");
+    Serial.print(LFSensorAnalog[1]);
+    Serial.print(" ");
+    Serial.print(LFSensorAnalog[2]);
+    Serial.print(" ");
+    Serial.print(LFSensorAnalog[3]);
+    Serial.print(" ");
+    Serial.println(LFSensorAnalog[4]);
+
+    calculateError_LF(LFSensorAnalog[0], LFSensorAnalog[1], LFSensorAnalog[2], LFSensorAnalog[3], LFSensorAnalog[4]);
     calculatePID_LF();
     motorPIDcontrol_LF();
     Serial.print("in forward");
@@ -290,8 +314,9 @@ void mazeSolve()
         {
         case NO_LINE:
             Serial.println("NO_LINE");
-
-            left(80);
+            stopCar();
+            delay(200);
+            left(60);
             delay(50);
             while (mode != FOLLOWING_LINE)
             {
@@ -303,16 +328,18 @@ void mazeSolve()
         case CONT_LINE:
             Serial.println("CONT_LINE");
 
-            while (BKSensor[0] != 0)
-            { // 0 -> there is left turn
-                readBackSensor();
-            }
-            left(80);
+            // while (BKSensor[0] != 1) {  //0 -> there is left turn
+            //   readBackSensor();
+            // }
+            stopCar();
+            delay(200);
+            left(60);
             delay(50);
             while (mode != FOLLOWING_LINE)
             {
                 Read_IR_sensors();
             }
+
             // recIntersection('L');
             break;
 
@@ -320,11 +347,12 @@ void mazeSolve()
             Serial.println("RIGHT_TURN");
             // wait for 2 sensor at least one
 
-            while (BKSensor[1] != 0)
-            { // 0 -> there is right turn
-                readBackSensor();
-            }
-            right(80);
+            // while (BKSensor[1] != 1) {  //0 -> there is right turn
+            //   readBackSensor();
+            // }
+            stopCar();
+            delay(200);
+            right(60);
             delay(50);
             while (mode != FOLLOWING_LINE)
             {
@@ -336,11 +364,12 @@ void mazeSolve()
         case LEFT_TURN:
             Serial.println("LEFT_TURN");
 
-            while (BKSensor[0] != 0)
-            { // 0 -> there is left turn
-                readBackSensor();
-            }
-            left(80);
+            // while (BKSensor[0] != 1) {  //0 -> there is left turn
+            //   readBackSensor();
+            // }
+            stopCar();
+            delay(200);
+            left(60);
             delay(50);
             while (mode != FOLLOWING_LINE)
             {
@@ -359,6 +388,7 @@ void mazeSolve()
     }
 }
 
+////////////////////////////////////////////////Maze Code/////////////////////////////////////////////////////////
 void recIntersection(char direction)
 {
     path[pathLength] = direction; // Store the intersection in the path variable.
@@ -495,13 +525,16 @@ void mazeTurn(char dir)
         break;
     }
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void loop()
 {
-    Serial.println("Start First Pass");
-    mazeSolve(); // First pass to solve the maze
-    Serial.println("End First Pass");
-
+    // Serial.println("Start First Pass");
+    // mazeSolve(); // First pass to solve the maze
+    // Serial.println("End First Pass");
+    // readLightSensor();
+    // readBackSensor();
+    // testSensorValues();
     // delay(5000);
     // Serial.println("Starting 2nd Pass");
     // pathIndex = 0;
@@ -513,4 +546,5 @@ void loop()
     // status = 0; // 1st pass
     // pathIndex = 0;
     // pathLength = 0;
+    forward();
 }
