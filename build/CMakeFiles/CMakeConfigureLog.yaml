@@ -5,7 +5,7 @@ events:
     kind: "message-v1"
     backtrace:
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineSystem.cmake:205 (message)"
-      - "CMakeLists.txt:2 (project)"
+      - "CMakeLists.txt:3 (project)"
     message: |
       The system is: Windows - 10.0.22631 - AMD64
   -
@@ -14,7 +14,7 @@ events:
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:2 (project)"
+      - "CMakeLists.txt:3 (project)"
     message: |
       Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
       Compiler:  
@@ -24,8 +24,8 @@ events:
       The output was:
       0
       MSBuild version 17.3.1+2badb37d1 for .NET Framework
-      Build started 4/19/2024 1:28:15 PM.
-      Project "D:\\2nd_term\\embedded\\MazeSolver-LineFollower\\build\\CMakeFiles\\3.29.1\\CompilerIdC\\CompilerIdC.vcxproj" on node 1 (default targets).
+      Build started 5/3/2024 11:02:40 AM.
+      Project "D:\\2nd_term\\embedded\\split\\MazeSolver-LineFollower\\build\\CMakeFiles\\3.29.1\\CompilerIdC\\CompilerIdC.vcxproj" on node 1 (default targets).
       PrepareForBuild:
         Creating directory "Debug\\".
         Creating directory "Debug\\CompilerIdC.tlog\\".
@@ -36,7 +36,7 @@ events:
         CMakeCCompilerId.c
       Link:
         C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.33.31629\\bin\\HostX86\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdC.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdC.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdC.lib" /MACHINE:X64 Debug\\CMakeCCompilerId.obj
-        CompilerIdC.vcxproj -> D:\\2nd_term\\embedded\\MazeSolver-LineFollower\\build\\CMakeFiles\\3.29.1\\CompilerIdC\\CompilerIdC.exe
+        CompilerIdC.vcxproj -> D:\\2nd_term\\embedded\\split\\MazeSolver-LineFollower\\build\\CMakeFiles\\3.29.1\\CompilerIdC\\CompilerIdC.exe
       PostBuildEvent:
         for %%i in (cl.exe) do @echo CMAKE_C_COMPILER=%%~$PATH:i
         :VCEnd
@@ -44,13 +44,13 @@ events:
       FinalizeBuildStatus:
         Deleting file "Debug\\CompilerIdC.tlog\\unsuccessfulbuild".
         Touching "Debug\\CompilerIdC.tlog\\CompilerIdC.lastbuildstate".
-      Done Building Project "D:\\2nd_term\\embedded\\MazeSolver-LineFollower\\build\\CMakeFiles\\3.29.1\\CompilerIdC\\CompilerIdC.vcxproj" (default targets).
+      Done Building Project "D:\\2nd_term\\embedded\\split\\MazeSolver-LineFollower\\build\\CMakeFiles\\3.29.1\\CompilerIdC\\CompilerIdC.vcxproj" (default targets).
       
       Build succeeded.
           0 Warning(s)
           0 Error(s)
       
-      Time Elapsed 00:00:01.01
+      Time Elapsed 00:00:00.98
       
       
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
@@ -58,7 +58,7 @@ events:
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.vcxproj"
       
       The C compiler identification is MSVC, found in:
-        D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/3.29.1/CompilerIdC/CompilerIdC.exe
+        D:/2nd_term/embedded/split/MazeSolver-LineFollower/build/CMakeFiles/3.29.1/CompilerIdC/CompilerIdC.exe
       
   -
     kind: "message-v1"
@@ -66,7 +66,7 @@ events:
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
-      - "CMakeLists.txt:2 (project)"
+      - "CMakeLists.txt:3 (project)"
     message: |
       Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
       Compiler:  
@@ -76,8 +76,8 @@ events:
       The output was:
       0
       MSBuild version 17.3.1+2badb37d1 for .NET Framework
-      Build started 4/19/2024 1:28:16 PM.
-      Project "D:\\2nd_term\\embedded\\MazeSolver-LineFollower\\build\\CMakeFiles\\3.29.1\\CompilerIdCXX\\CompilerIdCXX.vcxproj" on node 1 (default targets).
+      Build started 5/3/2024 11:02:42 AM.
+      Project "D:\\2nd_term\\embedded\\split\\MazeSolver-LineFollower\\build\\CMakeFiles\\3.29.1\\CompilerIdCXX\\CompilerIdCXX.vcxproj" on node 1 (default targets).
       PrepareForBuild:
         Creating directory "Debug\\".
         Creating directory "Debug\\CompilerIdCXX.tlog\\".
@@ -88,7 +88,7 @@ events:
         CMakeCXXCompilerId.cpp
       Link:
         C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.33.31629\\bin\\HostX86\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdCXX.lib" /MACHINE:X64 Debug\\CMakeCXXCompilerId.obj
-        CompilerIdCXX.vcxproj -> D:\\2nd_term\\embedded\\MazeSolver-LineFollower\\build\\CMakeFiles\\3.29.1\\CompilerIdCXX\\CompilerIdCXX.exe
+        CompilerIdCXX.vcxproj -> D:\\2nd_term\\embedded\\split\\MazeSolver-LineFollower\\build\\CMakeFiles\\3.29.1\\CompilerIdCXX\\CompilerIdCXX.exe
       PostBuildEvent:
         for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
         :VCEnd
@@ -96,13 +96,13 @@ events:
       FinalizeBuildStatus:
         Deleting file "Debug\\CompilerIdCXX.tlog\\unsuccessfulbuild".
         Touching "Debug\\CompilerIdCXX.tlog\\CompilerIdCXX.lastbuildstate".
-      Done Building Project "D:\\2nd_term\\embedded\\MazeSolver-LineFollower\\build\\CMakeFiles\\3.29.1\\CompilerIdCXX\\CompilerIdCXX.vcxproj" (default targets).
+      Done Building Project "D:\\2nd_term\\embedded\\split\\MazeSolver-LineFollower\\build\\CMakeFiles\\3.29.1\\CompilerIdCXX\\CompilerIdCXX.vcxproj" (default targets).
       
       Build succeeded.
           0 Warning(s)
           0 Error(s)
       
-      Time Elapsed 00:00:00.77
+      Time Elapsed 00:00:00.80
       
       
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -110,56 +110,56 @@ events:
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
       
       The CXX compiler identification is MSVC, found in:
-        D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/3.29.1/CompilerIdCXX/CompilerIdCXX.exe
+        D:/2nd_term/embedded/split/MazeSolver-LineFollower/build/CMakeFiles/3.29.1/CompilerIdCXX/CompilerIdCXX.exe
       
   -
     kind: "try_compile-v1"
     backtrace:
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerABI.cmake:64 (try_compile)"
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:2 (project)"
+      - "CMakeLists.txt:3 (project)"
     checks:
       - "Detecting C compiler ABI info"
     directories:
-      source: "D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-eu9v41"
-      binary: "D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-eu9v41"
+      source: "D:/2nd_term/embedded/split/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-ozbk2p"
+      binary: "D:/2nd_term/embedded/split/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-ozbk2p"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
     buildResult:
       variable: "CMAKE_C_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-eu9v41'
+        Change Dir: 'D:/2nd_term/embedded/split/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-ozbk2p'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_c47f5.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_eb14c.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         MSBuild version 17.3.1+2badb37d1 for .NET Framework
-        Build started 4/19/2024 1:28:17 PM.
-        Project "D:\\2nd_term\\embedded\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-eu9v41\\cmTC_c47f5.vcxproj" on node 1 (default targets).
+        Build started 5/3/2024 11:02:43 AM.
+        Project "D:\\2nd_term\\embedded\\split\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ozbk2p\\cmTC_eb14c.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_c47f5.dir\\Debug\\".
-          Creating directory "D:\\2nd_term\\embedded\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-eu9v41\\Debug\\".
-          Creating directory "cmTC_c47f5.dir\\Debug\\cmTC_c47f5.tlog\\".
+          Creating directory "cmTC_eb14c.dir\\Debug\\".
+          Creating directory "D:\\2nd_term\\embedded\\split\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ozbk2p\\Debug\\".
+          Creating directory "cmTC_eb14c.dir\\Debug\\cmTC_eb14c.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_c47f5.dir\\Debug\\cmTC_c47f5.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Creating "cmTC_eb14c.dir\\Debug\\cmTC_eb14c.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.33.31629\\bin\\HostX86\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_c47f5.dir\\Debug\\\\" /Fd"cmTC_c47f5.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCCompilerABI.c"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.33.31629\\bin\\HostX86\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_eb14c.dir\\Debug\\\\" /Fd"cmTC_eb14c.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCCompilerABI.c"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.33.31630 for x64
           CMakeCCompilerABI.c
           Copyright (C) Microsoft Corporation.  All rights reserved.
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_c47f5.dir\\Debug\\\\" /Fd"cmTC_c47f5.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCCompilerABI.c"
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_eb14c.dir\\Debug\\\\" /Fd"cmTC_eb14c.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCCompilerABI.c"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.33.31629\\bin\\HostX86\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\2nd_term\\embedded\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-eu9v41\\Debug\\cmTC_c47f5.exe" /INCREMENTAL /ILK:"cmTC_c47f5.dir\\Debug\\cmTC_c47f5.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-eu9v41/Debug/cmTC_c47f5.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-eu9v41/Debug/cmTC_c47f5.lib" /MACHINE:X64  /machine:x64 cmTC_c47f5.dir\\Debug\\CMakeCCompilerABI.obj
-          cmTC_c47f5.vcxproj -> D:\\2nd_term\\embedded\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-eu9v41\\Debug\\cmTC_c47f5.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.33.31629\\bin\\HostX86\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\2nd_term\\embedded\\split\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ozbk2p\\Debug\\cmTC_eb14c.exe" /INCREMENTAL /ILK:"cmTC_eb14c.dir\\Debug\\cmTC_eb14c.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/2nd_term/embedded/split/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-ozbk2p/Debug/cmTC_eb14c.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/2nd_term/embedded/split/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-ozbk2p/Debug/cmTC_eb14c.lib" /MACHINE:X64  /machine:x64 cmTC_eb14c.dir\\Debug\\CMakeCCompilerABI.obj
+          cmTC_eb14c.vcxproj -> D:\\2nd_term\\embedded\\split\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ozbk2p\\Debug\\cmTC_eb14c.exe
         FinalizeBuildStatus:
-          Deleting file "cmTC_c47f5.dir\\Debug\\cmTC_c47f5.tlog\\unsuccessfulbuild".
-          Touching "cmTC_c47f5.dir\\Debug\\cmTC_c47f5.tlog\\cmTC_c47f5.lastbuildstate".
-        Done Building Project "D:\\2nd_term\\embedded\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-eu9v41\\cmTC_c47f5.vcxproj" (default targets).
+          Deleting file "cmTC_eb14c.dir\\Debug\\cmTC_eb14c.tlog\\unsuccessfulbuild".
+          Touching "cmTC_eb14c.dir\\Debug\\cmTC_eb14c.tlog\\cmTC_eb14c.lastbuildstate".
+        Done Building Project "D:\\2nd_term\\embedded\\split\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ozbk2p\\cmTC_eb14c.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:00.70
+        Time Elapsed 00:00:01.02
         
       exitCode: 0
   -
@@ -167,7 +167,7 @@ events:
     backtrace:
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerABI.cmake:170 (message)"
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:2 (project)"
+      - "CMakeLists.txt:3 (project)"
     message: |
       Parsed C implicit link information:
         link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
@@ -185,7 +185,7 @@ events:
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerABI.cmake:207 (cmake_determine_linker_id)"
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:2 (project)"
+      - "CMakeLists.txt:3 (project)"
     message: |
       Running the C compiler's linker: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.33.31629/bin/HostX86/x64/link.exe" "-v"
       Microsoft (R) Incremental Linker Version 14.33.31630.0
@@ -195,49 +195,49 @@ events:
     backtrace:
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerABI.cmake:64 (try_compile)"
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:2 (project)"
+      - "CMakeLists.txt:3 (project)"
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-r3dmzx"
-      binary: "D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-r3dmzx"
+      source: "D:/2nd_term/embedded/split/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-vnewfv"
+      binary: "D:/2nd_term/embedded/split/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-vnewfv"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /W3 /GR /EHsc"
     buildResult:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-r3dmzx'
+        Change Dir: 'D:/2nd_term/embedded/split/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-vnewfv'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_30c2e.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_7bd5c.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         MSBuild version 17.3.1+2badb37d1 for .NET Framework
-        Build started 4/19/2024 1:28:18 PM.
-        Project "D:\\2nd_term\\embedded\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-r3dmzx\\cmTC_30c2e.vcxproj" on node 1 (default targets).
+        Build started 5/3/2024 11:02:45 AM.
+        Project "D:\\2nd_term\\embedded\\split\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-vnewfv\\cmTC_7bd5c.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_30c2e.dir\\Debug\\".
-          Creating directory "D:\\2nd_term\\embedded\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-r3dmzx\\Debug\\".
-          Creating directory "cmTC_30c2e.dir\\Debug\\cmTC_30c2e.tlog\\".
+          Creating directory "cmTC_7bd5c.dir\\Debug\\".
+          Creating directory "D:\\2nd_term\\embedded\\split\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-vnewfv\\Debug\\".
+          Creating directory "cmTC_7bd5c.dir\\Debug\\cmTC_7bd5c.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_30c2e.dir\\Debug\\cmTC_30c2e.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Creating "cmTC_7bd5c.dir\\Debug\\cmTC_7bd5c.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.33.31629\\bin\\HostX86\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_30c2e.dir\\Debug\\\\" /Fd"cmTC_30c2e.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCXXCompilerABI.cpp"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.33.31629\\bin\\HostX86\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_7bd5c.dir\\Debug\\\\" /Fd"cmTC_7bd5c.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCXXCompilerABI.cpp"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.33.31630 for x64
           CMakeCXXCompilerABI.cpp
           Copyright (C) Microsoft Corporation.  All rights reserved.
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_30c2e.dir\\Debug\\\\" /Fd"cmTC_30c2e.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCXXCompilerABI.cpp"
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_7bd5c.dir\\Debug\\\\" /Fd"cmTC_7bd5c.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCXXCompilerABI.cpp"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.33.31629\\bin\\HostX86\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\2nd_term\\embedded\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-r3dmzx\\Debug\\cmTC_30c2e.exe" /INCREMENTAL /ILK:"cmTC_30c2e.dir\\Debug\\cmTC_30c2e.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-r3dmzx/Debug/cmTC_30c2e.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-r3dmzx/Debug/cmTC_30c2e.lib" /MACHINE:X64  /machine:x64 cmTC_30c2e.dir\\Debug\\CMakeCXXCompilerABI.obj
-          cmTC_30c2e.vcxproj -> D:\\2nd_term\\embedded\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-r3dmzx\\Debug\\cmTC_30c2e.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.33.31629\\bin\\HostX86\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\2nd_term\\embedded\\split\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-vnewfv\\Debug\\cmTC_7bd5c.exe" /INCREMENTAL /ILK:"cmTC_7bd5c.dir\\Debug\\cmTC_7bd5c.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/2nd_term/embedded/split/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-vnewfv/Debug/cmTC_7bd5c.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/2nd_term/embedded/split/MazeSolver-LineFollower/build/CMakeFiles/CMakeScratch/TryCompile-vnewfv/Debug/cmTC_7bd5c.lib" /MACHINE:X64  /machine:x64 cmTC_7bd5c.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_7bd5c.vcxproj -> D:\\2nd_term\\embedded\\split\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-vnewfv\\Debug\\cmTC_7bd5c.exe
         FinalizeBuildStatus:
-          Deleting file "cmTC_30c2e.dir\\Debug\\cmTC_30c2e.tlog\\unsuccessfulbuild".
-          Touching "cmTC_30c2e.dir\\Debug\\cmTC_30c2e.tlog\\cmTC_30c2e.lastbuildstate".
-        Done Building Project "D:\\2nd_term\\embedded\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-r3dmzx\\cmTC_30c2e.vcxproj" (default targets).
+          Deleting file "cmTC_7bd5c.dir\\Debug\\cmTC_7bd5c.tlog\\unsuccessfulbuild".
+          Touching "cmTC_7bd5c.dir\\Debug\\cmTC_7bd5c.tlog\\cmTC_7bd5c.lastbuildstate".
+        Done Building Project "D:\\2nd_term\\embedded\\split\\MazeSolver-LineFollower\\build\\CMakeFiles\\CMakeScratch\\TryCompile-vnewfv\\cmTC_7bd5c.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:00.70
+        Time Elapsed 00:00:00.77
         
       exitCode: 0
   -
@@ -245,7 +245,7 @@ events:
     backtrace:
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerABI.cmake:170 (message)"
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:2 (project)"
+      - "CMakeLists.txt:3 (project)"
     message: |
       Parsed CXX implicit link information:
         link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
@@ -263,7 +263,7 @@ events:
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerABI.cmake:207 (cmake_determine_linker_id)"
       - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:2 (project)"
+      - "CMakeLists.txt:3 (project)"
     message: |
       Running the CXX compiler's linker: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.33.31629/bin/HostX86/x64/link.exe" "-v"
       Microsoft (R) Incremental Linker Version 14.33.31630.0

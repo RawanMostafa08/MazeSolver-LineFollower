@@ -23,12 +23,13 @@ C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/Windows-MSVC.cmake
 C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/Windows.cmake
 C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/WindowsPaths.cmake
 C:/Program Files/CMake/share/cmake-3.29/Templates/CPackConfig.cmake.in
-D:/2nd_term/embedded/MazeSolver-LineFollower/CMakeLists.txt
-D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/3.29.1/CMakeCCompiler.cmake
-D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/3.29.1/CMakeCXXCompiler.cmake
-D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/3.29.1/CMakeRCCompiler.cmake
-D:/2nd_term/embedded/MazeSolver-LineFollower/build/CMakeFiles/3.29.1/CMakeSystem.cmake
-D:/opencv/build/x64/vc16/lib/OpenCVConfig-version.cmake
+D:/2nd_term/embedded/split/MazeSolver-LineFollower/CMakeLists.txt
+D:/2nd_term/embedded/split/MazeSolver-LineFollower/build/CMakeFiles/3.29.1/CMakeCCompiler.cmake
+D:/2nd_term/embedded/split/MazeSolver-LineFollower/build/CMakeFiles/3.29.1/CMakeCXXCompiler.cmake
+D:/2nd_term/embedded/split/MazeSolver-LineFollower/build/CMakeFiles/3.29.1/CMakeRCCompiler.cmake
+D:/2nd_term/embedded/split/MazeSolver-LineFollower/build/CMakeFiles/3.29.1/CMakeSystem.cmake
+D:/opencv/build/OpenCVConfig-version.cmake
+D:/opencv/build/OpenCVConfig.cmake
 D:/opencv/build/x64/vc16/lib/OpenCVConfig.cmake
 D:/opencv/build/x64/vc16/lib/OpenCVModules-debug.cmake
 D:/opencv/build/x64/vc16/lib/OpenCVModules-release.cmake
