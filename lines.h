@@ -12,6 +12,7 @@ bool draw_angle(cv::Mat  image, cv::Point2f frontrobotCenter, cv::Point2f backro
 cv::Mat thin_sheet(cv::Mat image);
 cv::Mat GetLines(cv::Mat sheet);
 bool Desicion(cv::Mat  image, cv::Point2f frontrobotCenter, cv::Point2f backrobotCenter);
+bool Desicion2(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobotCenter);
 
 
 

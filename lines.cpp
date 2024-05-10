@@ -97,6 +97,65 @@ bool Desicion(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobot
     }
     return speedup;
 }
+bool Desicion2(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobotCenter)
+{
+     cv::Point2f directionVector = computeDirectionVector(backrobotCenter, frontrobotCenter);
+
+    // Normalize the direction vector
+    float magnitude = sqrt(directionVector.x * directionVector.x + directionVector.y * directionVector.y);
+    directionVector.x /= magnitude;
+    directionVector.y /= magnitude;
+
+    // Scale the direction vector to set the dimensions of the ROI
+    int roiWidth = 150;
+    int roiHeight = 50;
+    if (directionVector.x < directionVector.y)
+    {
+        cv::swap(roiHeight, roiWidth);
+    }
+    cv::Point2f topLeft = frontrobotCenter;
+    if (frontrobotCenter.y == backrobotCenter.y && backrobotCenter.x > frontrobotCenter.x)
+    {
+        topLeft.x = frontrobotCenter.x - roiWidth;
+        topLeft.y = frontrobotCenter.y - roiHeight / 2;
+    }
+    else if (frontrobotCenter.y == backrobotCenter.y && backrobotCenter.x < frontrobotCenter.x)
+    {
+        topLeft.y = frontrobotCenter.y - roiHeight / 2;
+    }
+    else if (frontrobotCenter.x == backrobotCenter.x && backrobotCenter.y > frontrobotCenter.y)
+    {
+        topLeft.x = frontrobotCenter.x - roiWidth / 2;
+    }
+    else if (frontrobotCenter.x == backrobotCenter.x && backrobotCenter.y < frontrobotCenter.y)
+    {
+        topLeft.x = frontrobotCenter.x - roiWidth / 2;
+        topLeft.y = frontrobotCenter.y - roiHeight;
+    }
+
+    // Adjust the width and height based on the direction vector
+    // cv::Point2f perpendicularVector = computePerpendicularVector(directionVector);
+    // cv::Point2f roiCenter = (frontrobotCenter + backrobotCenter) * 0.5;
+    // cv::Point2f topLeft = roiCenter - directionVector * roiWidth * 0.5 - perpendicularVector * roiHeight * 0.5;
+    if (topLeft.x < 0)
+        topLeft.x = 0;
+    if (topLeft.y < 0)
+        topLeft.y = 0;
+    if (topLeft.x + roiWidth >= image.cols)
+        topLeft.x = image.cols - roiWidth-1;
+    if (topLeft.y + roiHeight >= image.rows)
+        topLeft.y = image.rows - roiHeight-1;
+    // // Define the region of interest (ROI) rectangle
+    cv::Rect roiRect(topLeft.x, topLeft.y, roiWidth, roiHeight);
+    std::cout << "ROI rectangle" << roiRect << std::endl;
+    // Extract the region of interest from the original image
+    cv::Mat roiImage = image(roiRect);
+    imshow("roiImage", roiImage);
+    cv::waitKey(0);
+    bool speedup = cv::countNonZero(roiImage) > 0;
+    
+    return speedup;
+}
 bool draw(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobotCenter)
 {
 

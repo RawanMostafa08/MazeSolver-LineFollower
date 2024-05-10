@@ -80,7 +80,7 @@ int main(int, char **)
     cv::Point2f backrobotCenter = robotBack(sheet);
     std::cout << "the robot front" << frontrobotCenter << "the back" << backrobotCenter << std::endl;
 
-    if (Desicion(linedImage, frontrobotCenter, backrobotCenter))
+    if (Desicion2(linedImage, frontrobotCenter, backrobotCenter))
     {
 
         std::cout << "speed up" << std::endl;
