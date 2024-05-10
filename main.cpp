@@ -22,6 +22,42 @@ cv::Mat edgesDetection(cv::Mat image)
     return finalImage;
 }
 
+cv::Mat extractImage(cv ::Mat image)
+{
+
+    cv::Mat gray;
+    cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+
+    cv::Mat thresholded;
+    threshold(gray, thresholded, 160, 255, cv::THRESH_BINARY);
+
+    cv::Mat edged_image;
+    Canny(thresholded, edged_image, 150, 350);
+
+    std::vector<std::vector<cv::Point>> contours;
+    findContours(thresholded, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+    double maxArea = 0;
+    int maxAreaContourIndex = -1;
+    for (size_t i = 0; i < contours.size(); i++)
+    {
+        // std::cout << "contour" << std::endl;
+        double area = contourArea(contours[i]);
+        if (area > maxArea)
+        {
+            maxArea = area;
+            maxAreaContourIndex = i;
+        }
+    }
+    cv::Mat mask = cv::Mat::zeros(image.size(), CV_8UC1);
+    drawContours(mask, contours, maxAreaContourIndex, cv::Scalar( 255),cv:: FILLED);
+    imshow("mask Sheet", mask);
+    cv::waitKey(0);
+    // Bitwise AND operation to extract white sheet
+    cv::Mat extractedSheet;
+    bitwise_and(image, image, extractedSheet, mask);
+    return extractedSheet;
+}
 int main(int, char **)
 {
 
@@ -35,19 +71,20 @@ int main(int, char **)
     }
     cv::Size newSize(800, 800); // Resize the image
     cv::resize(image, image, newSize, cv::INTER_AREA);
-
+    //////////////////////extract paper////////////////////////////////////
+    cv::Mat sheet = extractImage(image);
     ////////////////////////////////////get edges///////////////////
-    cv::Mat edgedImage = edgesDetection(image);
+    cv::Mat edgedImage = edgesDetection(sheet);
     ///////////////////////////////////////////////////////////////////
     // cvtColor(image, image, COLOR_BGR2HSV);
     // Mat img_blur;
     // GaussianBlur(image, img_blur, Size(3, 3), 0);
     ///////////////////////////////////////////////////////
-    cv::Point2f frontrobotCenter = robotFront(image);
-    cv::Point2f backrobotCenter = robotBack(image);
+    cv::Point2f frontrobotCenter = robotFront(sheet);
+    cv::Point2f backrobotCenter = robotBack(sheet);
     std::cout << "the robot front" << frontrobotCenter << "the back" << backrobotCenter << std::endl;
     ////////////////////////////////////robot front and back detected/////////////////////
-    if (draw(image, frontrobotCenter, backrobotCenter))
+    if (draw(sheet, frontrobotCenter, backrobotCenter))
     {
 
         std::cout << "speed up" << std::endl;
