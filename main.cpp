@@ -50,7 +50,7 @@ cv::Mat extractImage(cv ::Mat image)
         }
     }
     cv::Mat mask = cv::Mat::zeros(image.size(), CV_8UC1);
-    drawContours(mask, contours, maxAreaContourIndex, cv::Scalar( 255),cv:: FILLED);
+    drawContours(mask, contours, maxAreaContourIndex, cv::Scalar(255), cv::FILLED);
     imshow("mask Sheet", mask);
     cv::waitKey(0);
     // Bitwise AND operation to extract white sheet
@@ -69,22 +69,18 @@ int main(int, char **)
         std::cerr << "Error: Unable to read the image." << std::endl;
         return -1;
     }
-    cv::Size newSize(800, 800); // Resize the image
-    cv::resize(image, image, newSize, cv::INTER_AREA);
+    // cv::Size newSize(800, 800); // Resize the image
+    // cv::resize(image, image, newSize, cv::INTER_AREA);
     //////////////////////extract paper////////////////////////////////////
     cv::Mat sheet = extractImage(image);
-    ////////////////////////////////////get edges///////////////////
-    cv::Mat edgedImage = edgesDetection(sheet);
-    ///////////////////////////////////////////////////////////////////
-    // cvtColor(image, image, COLOR_BGR2HSV);
-    // Mat img_blur;
-    // GaussianBlur(image, img_blur, Size(3, 3), 0);
-    ///////////////////////////////////////////////////////
+    cv::Mat thinnedImage = thin_sheet(sheet);
+    cv::Mat linedImage = GetLines(thinnedImage);
+
     cv::Point2f frontrobotCenter = robotFront(sheet);
     cv::Point2f backrobotCenter = robotBack(sheet);
     std::cout << "the robot front" << frontrobotCenter << "the back" << backrobotCenter << std::endl;
-    ////////////////////////////////////robot front and back detected/////////////////////
-    if (draw(sheet, frontrobotCenter, backrobotCenter))
+
+    if (Desicion(linedImage, frontrobotCenter, backrobotCenter))
     {
 
         std::cout << "speed up" << std::endl;
@@ -93,6 +89,28 @@ int main(int, char **)
     {
         std::cout << "slow down" << std::endl;
     }
+
+    ////////////////////////////////////get edges///////////////////
+    // cv::Mat edgedImage = edgesDetection(sheet);
+    ///////////////////////////////////////////////////////////////////
+    // cvtColor(image, image, COLOR_BGR2HSV);
+    // Mat img_blur;
+    // GaussianBlur(image, img_blur, Size(3, 3), 0);
+    ///////////////////////////////////////////////////////
+    // cv::Point2f frontrobotCenter = robotFront(sheet);
+    // cv::Point2f backrobotCenter = robotBack(sheet);
+    // std::cout << "the robot front" << frontrobotCenter << "the back" << backrobotCenter << std::endl;
+    // Desicion(linedImage, frontrobotCenter, backrobotCenter);
+    // ////////////////////////////////////robot front and back detected/////////////////////
+    // if (draw(sheet, frontrobotCenter, backrobotCenter))
+    // {
+
+    //     std::cout << "speed up" << std::endl;
+    // }
+    // else
+    // {
+    //     std::cout << "slow down" << std::endl;
+    // }
 
     // cvtColor(image, image, COLOR_HSV2BGR);
     // Mat img_gray;

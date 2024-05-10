@@ -1,7 +1,103 @@
 #include "lines.h"
 #include "utils.h"
 
-bool draw(cv::Mat  image, cv::Point2f frontrobotCenter, cv::Point2f backrobotCenter)
+cv::Mat thin_sheet(cv::Mat image)
+{
+
+    cv::Mat grayImage;
+    cv::cvtColor(image, grayImage, cv::COLOR_BGR2GRAY);
+
+    // Threshold the grayscale image to get a binary image
+    cv::Mat binaryImage;
+    cv::threshold(grayImage, binaryImage, 160, 255, cv::THRESH_BINARY);
+    cv::bitwise_not(binaryImage, binaryImage); // Invert the binary image
+
+    // Create a structuring element for morphological operations
+    cv::Mat kernel = cv::getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3));
+
+    // Perform morphological erosion to thin the white lines
+    cv::Mat thinnedImage;
+    cv::erode(binaryImage, thinnedImage, kernel);
+
+    // Perform skeletonization to further thin the lines
+    cv::Mat skel(thinnedImage.size(), CV_8UC1, cv::Scalar(0));
+    cv::Mat temp;
+    cv::Mat eroded;
+
+    bool done;
+    do
+    {
+        cv::erode(thinnedImage, eroded, kernel);
+        cv::dilate(eroded, temp, kernel);
+        cv::subtract(thinnedImage, temp, temp);
+        cv::bitwise_or(skel, temp, skel);
+        eroded.copyTo(thinnedImage);
+
+        done = (cv::countNonZero(thinnedImage) == 0);
+    } while (!done);
+
+    // Show the original and processed images
+    cv::imshow("Processed Image", skel);
+    cv::waitKey(0);
+    return skel;
+}
+cv::Mat GetLines(cv::Mat sheet)
+{
+
+    std::vector<cv::Vec4i> lines;
+    HoughLinesP(sheet, lines, 1, CV_PI / 180, 40, 18, 5);
+    // HoughLinesP(image, lines, 1, CV_PI / 180, 50, 20, 5);
+    cv::Mat LinedImage(sheet.size(), CV_8UC1, cv::Scalar(0, 0, 0));
+
+    for (size_t i = 0; i < lines.size(); i++)
+    {
+        cv::Vec4i l = lines[i];
+        cv::line(LinedImage, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(255), 1, cv::LINE_AA);
+    }
+
+    cv::dilate(LinedImage, LinedImage, cv::Mat(), cv::Point(-1, -1), 2); // Adjust the kernel size as needed
+    imshow("finalimage Sheet", LinedImage);
+    cv::waitKey(0);
+
+    return LinedImage;
+}
+
+bool Desicion(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobotCenter)
+{
+    int roiWidth = 200;
+    int roiHeight = 200;
+
+    // Define the region of interest (ROI) rectangle
+    cv::Rect roiRect(frontrobotCenter.x - roiWidth / 2, frontrobotCenter.y - roiHeight / 2, roiWidth, roiHeight);
+
+    // Ensure that the ROI rectangle is within the image boundaries
+    roiRect &= cv::Rect(0, 0, image.cols, image.rows);
+
+    // Extract the region of interest from the original image
+    cv::Mat roiImage = image(roiRect);
+    imshow("roiImage", roiImage);
+    cv::waitKey(0);
+    // bool hasEdges = cv::countNonZero(roiImage) > 0;
+    std::vector<cv::Vec4i> lines;
+
+    HoughLinesP(roiImage, lines, 1, CV_PI / 180, 50, 30, 10);
+    float slope = calculateSlope(frontrobotCenter, backrobotCenter);
+    bool speedup = false;
+    for (size_t i = 0; i < lines.size(); i++)
+    {
+        cv::Vec4i l = lines[i];
+        cv::Point p1 = cv::Point(l[0], l[1]);
+        cv::Point p2 = cv::Point(l[2], l[3]);
+        float diff = abs(slope - calculateSlope(p1, p2));
+        if (diff < 1)
+            if (CalculateDistance(frontrobotCenter, p1) > CalculateDistance(backrobotCenter, p1))
+            {
+                speedup = true;
+            }
+    }
+    return speedup;
+}
+bool draw(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobotCenter)
 {
 
     int roiWidth = 500;
@@ -14,19 +110,19 @@ bool draw(cv::Mat  image, cv::Point2f frontrobotCenter, cv::Point2f backrobotCen
     roiRect &= cv::Rect(0, 0, image.cols, image.rows);
 
     // Extract the region of interest from the original image
-    cv::Mat  roiImage = image(roiRect);
+    cv::Mat roiImage = image(roiRect);
     // imshow("roiImage", roiImage);
     // cv::waitKey(0);
 
     // Perform edge detection on the ROI (you may already have this step)
-    cv::Mat  edges;
+    cv::Mat edges;
     Canny(roiImage, edges, 50, 150, 3);
     imshow("edges", edges);
     cv::waitKey(0);
     // Detect lines using the Probabilistic Hough Transform
     std::vector<cv::Vec4i> lines;
     HoughLinesP(edges, lines, 1, CV_PI / 180, 50, 30, 10);
-    cv::Mat  finalimage(edges.size(), CV_8UC1, cv::Scalar (0, 0, 0));
+    cv::Mat finalimage(edges.size(), CV_8UC1, cv::Scalar(0, 0, 0));
     float slope = calculateSlope(frontrobotCenter, backrobotCenter);
     bool speedup = false;
     // Draw the lines on the ROI image
@@ -42,7 +138,7 @@ bool draw(cv::Mat  image, cv::Point2f frontrobotCenter, cv::Point2f backrobotCen
                 if (CalculateDistance(p2, p1) > 10)
                 {
                     speedup = true;
-                    line(finalimage, p1, p2, cv::Scalar (255, 255, 255), 2, cv::LINE_AA );
+                    line(finalimage, p1, p2, cv::Scalar(255, 255, 255), 2, cv::LINE_AA);
                 }
             }
     }
@@ -54,7 +150,7 @@ bool draw(cv::Mat  image, cv::Point2f frontrobotCenter, cv::Point2f backrobotCen
     return speedup;
 }
 
-bool draw_angle(cv::Mat  image, cv::Point2f frontrobotCenter, cv::Point2f backrobotCenter)
+bool draw_angle(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobotCenter)
 {
     cv::Point2f directionVector = computeDirectionVector(backrobotCenter, frontrobotCenter);
 
@@ -106,17 +202,17 @@ bool draw_angle(cv::Mat  image, cv::Point2f frontrobotCenter, cv::Point2f backro
     cv::Rect roiRect(topLeft.x, topLeft.y, roiWidth, roiHeight);
     std::cout << "ROI rectangle" << roiRect << std::endl;
     // // Extract the region of interest from the original image
-    cv::Mat  roiImage = image(roiRect);
+    cv::Mat roiImage = image(roiRect);
 
     // Perform edge detection on the ROI (you may already have this step)
-    cv::Mat  edges;
+    cv::Mat edges;
     Canny(roiImage, edges, 50, 150, 3);
     imshow("Original Image with ROI and Detected Lines", edges);
     cv::waitKey(0);
     // Detect lines using the Probabilistic Hough Transform
     std::vector<cv::Vec4i> lines;
     HoughLinesP(edges, lines, 1, CV_PI / 180, 50, 30, 10);
-    cv::Mat  finalimage(edges.size(), CV_8UC1, cv::Scalar (0, 0, 0));
+    cv::Mat finalimage(edges.size(), CV_8UC1, cv::Scalar(0, 0, 0));
     float slope = calculateSlope(frontrobotCenter, backrobotCenter);
     // Draw the lines on the ROI image
     bool speedup = false;
@@ -135,7 +231,7 @@ bool draw_angle(cv::Mat  image, cv::Point2f frontrobotCenter, cv::Point2f backro
                 if (CalculateDistance(p2, p1) > 10)
                 {
                     speedup = true;
-                    line(finalimage, p1, p2, cv::Scalar (255, 255, 255), 2, cv::LINE_AA );
+                    line(finalimage, p1, p2, cv::Scalar(255, 255, 255), 2, cv::LINE_AA);
                 }
             }
         }
