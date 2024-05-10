@@ -64,8 +64,8 @@ cv::Mat GetLines(cv::Mat sheet)
 
 bool Desicion(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobotCenter)
 {
-    int roiWidth = 200;
-    int roiHeight = 200;
+    float roiWidth = 200;
+    float roiHeight = 200;
 
     // Define the region of interest (ROI) rectangle
     cv::Rect roiRect(frontrobotCenter.x - roiWidth / 2, frontrobotCenter.y - roiHeight / 2, roiWidth, roiHeight);
@@ -99,7 +99,7 @@ bool Desicion(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobot
 }
 bool Desicion2(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobotCenter)
 {
-     cv::Point2f directionVector = computeDirectionVector(backrobotCenter, frontrobotCenter);
+    cv::Point2f directionVector = computeDirectionVector(backrobotCenter, frontrobotCenter);
 
     // Normalize the direction vector
     float magnitude = sqrt(directionVector.x * directionVector.x + directionVector.y * directionVector.y);
@@ -107,8 +107,8 @@ bool Desicion2(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobo
     directionVector.y /= magnitude;
 
     // Scale the direction vector to set the dimensions of the ROI
-    int roiWidth = 150;
-    int roiHeight = 50;
+    float roiWidth = 150;
+    float roiHeight = 50;
     if (directionVector.x < directionVector.y)
     {
         cv::swap(roiHeight, roiWidth);
@@ -142,9 +142,9 @@ bool Desicion2(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobo
     if (topLeft.y < 0)
         topLeft.y = 0;
     if (topLeft.x + roiWidth >= image.cols)
-        topLeft.x = image.cols - roiWidth-1;
+        topLeft.x = image.cols - roiWidth - 1;
     if (topLeft.y + roiHeight >= image.rows)
-        topLeft.y = image.rows - roiHeight-1;
+        topLeft.y = image.rows - roiHeight - 1;
     // // Define the region of interest (ROI) rectangle
     cv::Rect roiRect(topLeft.x, topLeft.y, roiWidth, roiHeight);
     std::cout << "ROI rectangle" << roiRect << std::endl;
@@ -153,7 +153,7 @@ bool Desicion2(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobo
     imshow("roiImage", roiImage);
     cv::waitKey(0);
     bool speedup = cv::countNonZero(roiImage) > 0;
-    
+
     return speedup;
 }
 bool draw(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobotCenter)
@@ -219,8 +219,8 @@ bool draw_angle(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrob
     directionVector.y /= magnitude;
 
     // Scale the direction vector to set the dimensions of the ROI
-    int roiWidth = 300;
-    int roiHeight = 100;
+    float roiWidth = 300;
+    float roiHeight = 100;
     if (directionVector.x < directionVector.y)
     {
         cv::swap(roiHeight, roiWidth);
@@ -275,7 +275,7 @@ bool draw_angle(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrob
     float slope = calculateSlope(frontrobotCenter, backrobotCenter);
     // Draw the lines on the ROI image
     bool speedup = false;
-    for (size_t i = 0; i < lines.size(); i++)
+    for (int i = 0; i < lines.size(); i++)
     {
         cv::Vec4i l = lines[i];
         cv::Point p1 = cv::Point(l[0], l[1]);

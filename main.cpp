@@ -39,7 +39,7 @@ cv::Mat extractImage(cv ::Mat image)
 
     double maxArea = 0;
     int maxAreaContourIndex = -1;
-    for (size_t i = 0; i < contours.size(); i++)
+    for (int i = 0; i < contours.size(); i++)
     {
         // std::cout << "contour" << std::endl;
         double area = contourArea(contours[i]);
