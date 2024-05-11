@@ -22,9 +22,9 @@ const int numSensors = 5; // Number of sensors
 
 //SPEED 100
 // Max Kp in P controller = 18
-double Kp = 7.8;
+double Kp = 9;
 double Ki = 0;
-double Kd = 10;
+double Kd = 50;
 
 
 //  11/5 
@@ -45,7 +45,7 @@ double Kd = 10;
 // KI = 0
 // KD = 10
 //SPEED = 45
-int baseSpeed = 45;
+int baseSpeed = 50;
 
 
 // char Incoming_value = 0;
