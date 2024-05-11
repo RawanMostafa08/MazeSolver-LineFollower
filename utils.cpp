@@ -47,19 +47,25 @@ cv::Mat edgesDetection(cv::Mat image)
 
 cv::Mat extractImage(cv ::Mat image)
 {
+    double area = static_cast<double>(image.rows) * image.cols;
 
     cv::Mat gray;
     cvtColor(image, gray, cv::COLOR_BGR2GRAY);
 
     cv::Mat thresholded;
     threshold(gray, thresholded, 160, 255, cv::THRESH_BINARY);
-
+    // imshow("thresholded Sheet", thresholded);
+    // cv::waitKey(0);
     cv::Mat edged_image;
     Canny(thresholded, edged_image, 150, 350);
-
+    // imshow("edged_image Sheet", edged_image);
+    // cv::waitKey(0);
     std::vector<std::vector<cv::Point>> contours;
     findContours(thresholded, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-
+    if (contours.size() < 1)
+    {
+        return cv::Mat();
+    }
     double maxArea = 0;
     int maxAreaContourIndex = -1;
     for (int i = 0; i < contours.size(); i++)
@@ -71,6 +77,10 @@ cv::Mat extractImage(cv ::Mat image)
             maxArea = area;
             maxAreaContourIndex = i;
         }
+    }
+    if (maxArea < area / 2)
+    {
+        return cv::Mat();
     }
     cv::Mat mask = cv::Mat::zeros(image.size(), CV_8UC1);
     drawContours(mask, contours, maxAreaContourIndex, cv::Scalar(255), cv::FILLED);

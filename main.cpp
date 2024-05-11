@@ -9,11 +9,32 @@ void LineFollower(cv::Mat image)
 {
 
     cv::Mat sheet = extractImage(image);
+    if (sheet.empty())
+    {
+        std::cerr << "Error: Unable to extract the paper." << std::endl;
+        return;
+    }
     cv::Mat thinnedImage = thin_sheet(sheet);
+
     cv::Mat linedImage = GetLines(thinnedImage);
+    if (linedImage.empty())
+    {
+        std::cerr << "Error: Unable to extract the lines." << std::endl;
+        return;
+    }
 
     cv::Point2f frontrobotCenter = robotFront(sheet);
+    if (frontrobotCenter.x == -1)
+    {
+        std::cout << "can not find the car front red ball" << std::endl;
+        return;
+    }
     cv::Point2f backrobotCenter = robotBack(sheet);
+    if (backrobotCenter.x == -1)
+    {
+        std::cout << "can not find the car front red ball" << std::endl;
+        return;
+    }
     std::cout << "the robot front" << frontrobotCenter << "the back" << backrobotCenter << std::endl;
 
     if (Desicion2(linedImage, frontrobotCenter, backrobotCenter))
@@ -29,7 +50,7 @@ void LineFollower(cv::Mat image)
 int main(int, char **)
 {
 
-    std::string imagePath = "7.jpeg";
+    std::string imagePath = "1.jpeg";
     cv::Mat image = cv::imread(imagePath);
 
     if (image.empty())

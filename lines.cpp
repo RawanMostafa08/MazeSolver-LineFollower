@@ -46,6 +46,10 @@ cv::Mat GetLines(cv::Mat sheet)
 
     std::vector<cv::Vec4i> lines;
     HoughLinesP(sheet, lines, 1, CV_PI / 180, 40, 18, 5);
+    if (lines.empty())
+    {
+        return cv::Mat();
+    }
     // HoughLinesP(image, lines, 1, CV_PI / 180, 50, 20, 5);
     cv::Mat LinedImage(sheet.size(), CV_8UC1, cv::Scalar(0, 0, 0));
 
