@@ -41,11 +41,11 @@ void setup() {
 }
 
 void loop() {
-  int sensor1 = analogRead(A1); //left
-  int sensor2 = analogRead(A2);
-  int sensor3 = analogRead(A3);
-  int sensor4 = analogRead(A4);
-  int sensor5 = analogRead(A5); //right
+  int sensor1 = 900 - analogRead(A1); //left
+  int sensor2 = 900 - analogRead(A2);
+  int sensor3 = 900 - analogRead(A3);
+  int sensor4 = 900 - analogRead(A4);
+  int sensor5 = 900 - analogRead(A5); //right
   while (analogRead(A5) >= 200 && analogRead(A1) >= 200 && analogRead(A2) >= 200 && analogRead(A3) >= 200 && analogRead(A4) >= 200) {
     int turn_speed = 40;
     error = previousError;
@@ -85,7 +85,7 @@ void calculateError(int sensor1, int sensor2, int sensor3, int sensor4, int sens
   Serial.print(sensor4);
   Serial.print("sensor5 ");
   Serial.println(sensor5);
-  error = (sensor1 + sensor2) - (sensor5 + sensor4); //left-right
+  error = (sensor5 + sensor4)-(sensor1 + sensor2); //left-right
   //-ve error means go left
   //+ve error means go right
   if(error<0) //right>left
@@ -95,7 +95,6 @@ void calculateError(int sensor1, int sensor2, int sensor3, int sensor4, int sens
   // error+=error;
   // if (sensor1>200 && sensor2>200 && sensor3>200 && sensor4>200 && sensor5<100)
   // error+=error;
-  
   Serial.print("error= ");
   Serial.println(error);
 }

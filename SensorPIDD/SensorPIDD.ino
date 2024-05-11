@@ -1,14 +1,14 @@
-const int motorLeftA = 6;      // Digital pin for left motor A
-const int motorLeftB = 2;     // Digital pin for left motor B
+const int motorLeftA = 2;      // Digital pin for left motor A
+const int motorLeftB = 6;     // Digital pin for left motor B
 const int motorRightA = 7;     // Digital pin for right motor A
 const int motorRightB = 8;     // Digital pin for right motor B
 
   // Read sensor values
-  const int sensorPin[5] = {A1, A2, A3, A4, A5}; // Array of digital pins for the sensors
+const int sensorPin[5] = {A1, A2, A3, A4, A5}; // Array of digital pins for the sensors
 const int numSensors = 5; // Number of sensors
 
-#define LEFT_MOTOR_PIN 10
-#define RIGHT_MOTOR_PIN 11
+#define LEFT_MOTOR_PIN 11
+#define RIGHT_MOTOR_PIN 10
 
 //BEST RESULT FOR SPEED 30
 // double Kp = 3.8;
@@ -22,10 +22,16 @@ const int numSensors = 5; // Number of sensors
 
 //SPEED 100
 // Max Kp in P controller = 18
-double Kp = 17;
+double Kp = 7.8;
 double Ki = 0;
-double Kd = 0.3;
+double Kd = 10;
 
+
+//  11/5 
+//  speed=50
+//  kp=9
+//  kd=50
+//  ki=0
 
 //CURRECT PID PARAMETERS
 // KP = 7
@@ -34,7 +40,12 @@ double Kd = 0.3;
 //SPEED = 45
 
 
-int baseSpeed = 100;
+//CURRECT NEW PID PARAMETERS
+// KP = 7.8
+// KI = 0
+// KD = 10
+//SPEED = 45
+int baseSpeed = 45;
 
 
 // char Incoming_value = 0;
@@ -95,7 +106,7 @@ void loop() {
       Serial.print("Set Ki to: ");
       Serial.println(Ki);
     } else if (command == "kd") {
-      Kd = Serial.parseFloat();Z
+      Kd = Serial.parseFloat();
       Serial.print("Set Kd to: ");
       Serial.println(Kd);
       } else if (command == "speed") {
@@ -175,12 +186,11 @@ else if (sensorValues[0] == 0 && sensorValues[1] == 1 && sensorValues[2] == 1 &&
   // Calculate output (control signal for motor speed)
   output = Kp * error + Ki * integral + Kd * derivative;
 
+  previous_error = error;
   // Apply motor control based on output and error
   controlMotors(output, error);
 
   // Optional: Print sensor values and motor speed for debugging
-    Serial.print("  PID value: ");
-  Serial.println(output);
 
 }
 
@@ -201,18 +211,18 @@ void controlMotors(double speed, double error) {
   analogWrite(LEFT_MOTOR_PIN, leftSpeed);
   analogWrite(RIGHT_MOTOR_PIN,rightSpeed);
     // Optional: Print sensor values and motor speed for debugging
-  //         Serial.print("  Kp: ");
-  // Serial.print(Kp);
-  //       Serial.print("  Ki: ");
-  // Serial.print(Ki);
-  //       Serial.print("  Kd: ");
-  // Serial.print(Kd);
-      Serial.print("  Error: ");
-  Serial.print(error);
-  Serial.print("Left speed: ");
+          Serial.print("  Kp= ");
+  Serial.print(Kp);
+        Serial.print("  Ki= ");
+  Serial.print(Ki);
+        Serial.print("  Kd= ");
+  Serial.print(Kd);
+  //     Serial.print("  Error: ");
+  // Serial.print(error);
+  Serial.print("  Right= ");
   Serial.print(leftSpeed);
-  Serial.print(", Right speed: ");
-  Serial.print(rightSpeed);
+  Serial.print("  Left=");
+  Serial.println(rightSpeed);
 
 }
 
