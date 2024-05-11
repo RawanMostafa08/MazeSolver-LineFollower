@@ -3,8 +3,9 @@
 cv::Point2f robotFront(cv::Mat image)
 {
     cv::Mat fimg;
+    cv::GaussianBlur(image, fimg, cv::Size(5, 5), 0);
 
-    cvtColor(image, fimg, cv::COLOR_BGR2HSV);
+    cvtColor(fimg, fimg, cv::COLOR_BGR2HSV);
 
     cv::Scalar lower_red1 = cv::Scalar(0, 50, 20);
     cv::Scalar upper_red1 = cv::Scalar(5, 255, 255);
@@ -38,7 +39,7 @@ cv::Point2f robotFront(cv::Mat image)
         cv::Point2f center;
         float radius;
         minEnclosingCircle(contours[i], center, radius);
-        if (radius > 10 && radius < max_raduis)
+        if ( radius < max_raduis)
         {
             max_raduis = radius;
             max_center = center;
@@ -92,7 +93,7 @@ cv::Point2f robotBack(cv::Mat image)
         cv::Point2f center;
         float radius;
         minEnclosingCircle(contours[i], center, radius);
-        if (radius > 10 && radius < max_raduis)
+        if (radius < max_raduis)
         {
             max_raduis = radius;
             max_center = center;
