@@ -30,6 +30,11 @@ cv::Point2f robotFront(cv::Mat image)
     std::vector<std::vector<cv::Point>> contours;
     findContours(mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
+    if (contours.size() < 1)
+    {
+        return cv::Point2f(-1, -1);
+    }
+
     cv::Mat objectimage(fimg.size(), CV_8UC1, cv::Scalar(0, 0, 0));
 
     float max_raduis = 30;
@@ -81,7 +86,10 @@ cv::Point2f robotBack(cv::Mat image)
     // Find contours in the red mask
     std::vector<std::vector<cv::Point>> contours;
     findContours(mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-
+    if (contours.size() < 1)
+    {
+        return cv::Point2f(-1, -1);
+    }
     cv::Mat objectimage(bimg.size(), CV_8UC1, cv::Scalar(0, 0, 0));
 
     float max_raduis = 30;

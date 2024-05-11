@@ -11,15 +11,30 @@ void LineFollower(cv::Mat image)
     cv::resize(image, image, newSize, cv::INTER_AREA);
     //////////////////////extract paper////////////////////////////////////
     cv::Mat sheet = extractImage(image);
+    if(sheet.empty()){
+
+        std::cout<<"can not find the sheet"<<std::endl;
+        return;
+    }
     ////////////////////////////////////get edges///////////////////
-    cv::Mat edgedImage = edgesDetection(sheet);
+    // cv::Mat edgedImage = edgesDetection(sheet);
     ///////////////////////////////////////////////////////////////////
     // cvtColor(image, image, COLOR_BGR2HSV);
     // Mat img_blur;
     // GaussianBlur(image, img_blur, Size(3, 3), 0);
     ///////////////////////////////////////////////////////
     cv::Point2f frontrobotCenter = robotFront(sheet);
+    if (frontrobotCenter.x == -1)
+    {
+        std::cout << "can not find the car front red circle" << std::endl;
+        return;
+    }
     cv::Point2f backrobotCenter = robotBack(sheet);
+    if (backrobotCenter.x == -1)
+    {
+        std::cout << "can not find the car back green circle" << std::endl;
+        return;
+    }
     std::cout << "the robot front" << frontrobotCenter << "the back" << backrobotCenter << std::endl;
     ////////////////////////////////////robot front and back detected/////////////////////
     if (draw(sheet, frontrobotCenter, backrobotCenter))
@@ -36,7 +51,7 @@ void LineFollower(cv::Mat image)
 int main(int, char **)
 {
 
-    std::string imagePath = "6.jpeg";
+    std::string imagePath = "empty0.jpeg";
     cv::Mat image = cv::imread(imagePath);
 
     if (image.empty())

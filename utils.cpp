@@ -59,7 +59,10 @@ cv::Mat extractImage(cv ::Mat image)
 
     std::vector<std::vector<cv::Point>> contours;
     findContours(thresholded, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-
+    if (contours.size() < 1)
+    {
+        return cv::Mat(); 
+    }
     double maxArea = 0;
     int maxAreaContourIndex = -1;
     for (size_t i = 0; i < contours.size(); i++)
@@ -73,11 +76,13 @@ cv::Mat extractImage(cv ::Mat image)
         }
     }
     cv::Mat mask = cv::Mat::zeros(image.size(), CV_8UC1);
-    drawContours(mask, contours, maxAreaContourIndex, cv::Scalar( 255),cv:: FILLED);
+    drawContours(mask, contours, maxAreaContourIndex, cv::Scalar(255), cv::FILLED);
     imshow("mask Sheet", mask);
     cv::waitKey(0);
     // Bitwise AND operation to extract white sheet
     cv::Mat extractedSheet;
     bitwise_and(image, image, extractedSheet, mask);
+    imshow("extractedSheet Sheet", extractedSheet);
+    cv::waitKey(0);
     return extractedSheet;
 }
