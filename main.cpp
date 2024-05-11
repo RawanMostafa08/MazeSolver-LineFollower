@@ -3,72 +3,10 @@
 #include <vector>
 #include "car.h"
 #include "lines.h"
+#include "utils.h"
 
-cv::Mat edgesDetection(cv::Mat image)
+void LineFollower(cv::Mat image)
 {
-    // cvtColor(image, image, COLOR_HSV2BGR);
-    cvtColor(image, image, cv::COLOR_BGR2GRAY); // Blur the image for better edge detection
-    GaussianBlur(image, image, cv::Size(3, 3), 0);
-    Canny(image, image, 100, 200, 3, false);
-    std::vector<cv::Vec4i> lines;
-    HoughLinesP(image, lines, 1, CV_PI / 20, 20, 10, 3);
-    cv::Mat finalImage(image.size(), CV_8UC1, cv::Scalar(0, 0, 0));
-
-    for (size_t i = 0; i < lines.size(); i++)
-    {
-        cv::Vec4i l = lines[i];
-        cv::line(finalImage, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(255, 255, 255), 2, cv::LINE_AA);
-    }
-    return finalImage;
-}
-
-cv::Mat extractImage(cv ::Mat image)
-{
-
-    cv::Mat gray;
-    cvtColor(image, gray, cv::COLOR_BGR2GRAY);
-
-    cv::Mat thresholded;
-    threshold(gray, thresholded, 160, 255, cv::THRESH_BINARY);
-
-    cv::Mat edged_image;
-    Canny(thresholded, edged_image, 150, 350);
-
-    std::vector<std::vector<cv::Point>> contours;
-    findContours(thresholded, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-
-    double maxArea = 0;
-    int maxAreaContourIndex = -1;
-    for (size_t i = 0; i < contours.size(); i++)
-    {
-        // std::cout << "contour" << std::endl;
-        double area = contourArea(contours[i]);
-        if (area > maxArea)
-        {
-            maxArea = area;
-            maxAreaContourIndex = i;
-        }
-    }
-    cv::Mat mask = cv::Mat::zeros(image.size(), CV_8UC1);
-    drawContours(mask, contours, maxAreaContourIndex, cv::Scalar( 255),cv:: FILLED);
-    imshow("mask Sheet", mask);
-    cv::waitKey(0);
-    // Bitwise AND operation to extract white sheet
-    cv::Mat extractedSheet;
-    bitwise_and(image, image, extractedSheet, mask);
-    return extractedSheet;
-}
-int main(int, char **)
-{
-
-    std::string imagePath = "2.jpeg";
-    cv::Mat image = cv::imread(imagePath);
-
-    if (image.empty())
-    {
-        std::cerr << "Error: Unable to read the image." << std::endl;
-        return -1;
-    }
     cv::Size newSize(800, 800); // Resize the image
     cv::resize(image, image, newSize, cv::INTER_AREA);
     //////////////////////extract paper////////////////////////////////////
@@ -93,6 +31,20 @@ int main(int, char **)
     {
         std::cout << "slow down" << std::endl;
     }
+}
+
+int main(int, char **)
+{
+
+    std::string imagePath = "6.jpeg";
+    cv::Mat image = cv::imread(imagePath);
+
+    if (image.empty())
+    {
+        std::cerr << "Error: Unable to read the image." << std::endl;
+        return -1;
+    }
+    LineFollower(image);
 
     // cvtColor(image, image, COLOR_HSV2BGR);
     // Mat img_gray;
