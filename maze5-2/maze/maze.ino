@@ -4,9 +4,9 @@ const int SensorPin2 = A3;
 const int SensorPin3 = A4;
 const int SensorPin4 = A5;
 
-const int BackSensorleft = 4;    // left
-const int BackSensorcenter = 5;  // right
-const int BackSensorright = 3;   // right
+const int BackSensorleft = 3;    // left
+const int BackSensorcenter = 4;  // right
+const int BackSensorright = 5;   // right
 
 const int leftSpeed = 10;  // means pin 9 on the Arduino controls the speed of left motor
 const int rightSpeed = 11;
@@ -138,6 +138,7 @@ void Read_IR_sensors() {
   // far left sensor LFSensor[0]
   previousMode = mode;
   if (LFSensor[0] && LFSensor[1] && LFSensor[2] && LFSensor[3] && LFSensor[4]) {
+    
     // 11111
 
     mode = CONT_LINE;

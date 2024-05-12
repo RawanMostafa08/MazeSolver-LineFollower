@@ -3,6 +3,8 @@ const int motorLeftB = 6;     // Digital pin for left motor B
 const int motorRightA = 7;     // Digital pin for right motor A
 const int motorRightB = 8;     // Digital pin for right motor B
 
+const int led = 9;
+
   // Read sensor values
 const int sensorPin[5] = {A1, A2, A3, A4, A5}; // Array of digital pins for the sensors
 const int numSensors = 5; // Number of sensors
@@ -70,6 +72,8 @@ double error, integral = 0.0, derivative, output;
 double previous_error = 0.0; // Initialize previous error for derivative calculation
 
 void setup() {
+  pinMode(led, OUTPUT);
+
   pinMode(motorLeftA, OUTPUT);
   pinMode(motorLeftB, OUTPUT);
   pinMode(motorRightA, OUTPUT);
@@ -85,6 +89,10 @@ void setup() {
   digitalWrite(motorRightB,LOW);
   digitalWrite(motorLeftA,HIGH);
   digitalWrite(motorLeftB,LOW);
+
+  digitalWrite(led, LOW);
+
+
   pinMode(LEFT_MOTOR_PIN, OUTPUT);
   pinMode(RIGHT_MOTOR_PIN, OUTPUT);
   Serial.begin(9600); // Start serial communication for debugging (optional)
@@ -121,7 +129,17 @@ void loop() {
       // Start the motors
       MoveMotors();
       Serial.println("Motors started");
-    }  else {
+    } else if (command == "0") {
+      digitalWrite(led, LOW);
+      // Start the motors
+      Serial.println("0 recieved");
+    } else if (command == "1") {
+      // Start the motors
+            digitalWrite(led, HIGH);
+
+      Serial.println("1 recieved");
+    }
+      else {
       // Invalid command
       Serial.println("Invalid command");
     }

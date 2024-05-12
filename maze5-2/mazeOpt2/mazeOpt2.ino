@@ -4,9 +4,9 @@ const int SensorPin2 = A3;
 const int SensorPin3 = A4;
 const int SensorPin4 = A5;
 
-const int BackSensorleft = 4;    // left
-const int BackSensorcenter = 5;  // right
-const int BackSensorright = 3;   // right
+const int BackSensorleft = 3;    // left
+const int BackSensorcenter = 4;  // right
+const int BackSensorright = 5;   // right
 
 const int leftSpeed = 10;  // means pin 9 on the Arduino controls the speed of left motor
 const int rightSpeed = 11;
@@ -30,9 +30,9 @@ int pathIndex = 0;
 // #define turning_speed 80
 int P, D, I = 0, previousError, PIDvalue;
 int lsp, rsp;
-int lfspeed = 33;
+int lfspeed = 37;
 int turnspeed = 40;
-double Kp = 4;
+double Kp = 7.8;
 double Ki = 0;
 double Kd = 10;
 
@@ -147,7 +147,7 @@ void Read_IR_sensors() {
     // 100X0
     mode = LEFT_TURN;
     // error = 0;
-  } else if (!LFSensor[0] && !LFSensor[1] && !LFSensor[2] && !LFSensor[3] && !LFSensor[4] && previousMode == NO_LINE && BKSensor[0] == 0 && BKSensor[1] == 0 && BKSensor[2] == 0) {
+  } else if (!LFSensor[0] && !LFSensor[1] && !LFSensor[2] && !LFSensor[3] && !LFSensor[4] && previousMode == FOLLOWING_LINE && mode==FOLLOWING_LINE && BKSensor[0] == 0 && BKSensor[1] == 0 && BKSensor[2] == 0) {
     // 00000
     mode = NO_LINE;
     // error = 0;
@@ -199,8 +199,8 @@ void adjustDirection() {
 }
 
 void left() {               // rotates the car left, assuming speed leftSpeedVal and rightSpeedVal are set high enough
-  digitalWrite(in1, HIGH);  //right
-  digitalWrite(in2, LOW);   //right
+  digitalWrite(in1, HIGH); //right 
+  digitalWrite(in2, LOW); //right
   digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);
   analogWrite(rightSpeed, turnspeed);
@@ -218,8 +218,8 @@ void Uturn() {              // rotates the car left, assuming speed leftSpeedVal
 }
 
 void right() {
-  digitalWrite(in1, HIGH);  //right
-  digitalWrite(in2, LOW);   //right
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
   digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);
   analogWrite(rightSpeed, 0);
@@ -236,8 +236,8 @@ void recIntersection(char direction) {
 void mazeSolve() {
 
   // // Serial.println("In Maze");
-  while (!status)  // it does not reach the end
-  {
+  // while (!status)  // it does not reach the end
+  // {
     // Serial.println("In status");
     // Serial.print("Mode");
     // Serial.println(mode);
@@ -246,30 +246,27 @@ void mazeSolve() {
 
     switch (mode) {
       case NO_LINE:
-        // Serial.println("uturn");
         Serial.println("ana fe no line");
-        // forward();
-        delay(200);
-        if (digitalRead(BackSensorleft) == 0 && digitalRead(BackSensorcenter) == 0 && digitalRead(BackSensorright) == 0) {
-          Serial.println("ana fel if ele fe no line");
+        // if (digitalRead(BackSensorleft) == 0 && digitalRead(BackSensorcenter) == 0 && digitalRead(BackSensorright) == 0) {
+          Serial.println("ana fe no line");
           stopCar();
           delay(500);
           Uturn();
           delay(1000);
-          // Serial.println("ana abl el while");
-          while (!(BKSensor[0] == 0 && BKSensor[1] == 1 && BKSensor[2] == 0)) {
-            // Serial.println("ana fel while ele fe no line");
-            readBackSensor();
+          Serial.println("ana abl el while");
+          // while (!(BKSensor[0] == 0 && BKSensor[1] == 1 && BKSensor[2] == 0)) {
+          //   Serial.println("ana fel while ele fe no line");
+          // }
+          while (!(LFSensor[0] == 1 || LFSensor[1] == 1 || LFSensor[2] == 1)) {
+            Serial.println("ana fel while ele fe no line");
+            readLightSensor();
           }
           stopCar();
-          // Serial.println("ana ba3d el sto0p");
+          Serial.println("ana ba3d el sto0p");
           delay(500);
-
-          mode = FOLLOWING_LINE;
-
-          if (path[pathLength] != 'B')
-            recIntersection('B');
-        }
+        // }
+          // if (path[pathLength] != 'B')
+          //   recIntersection('B');
         break;
 
       case RIGHT_TURN:
@@ -306,7 +303,7 @@ void mazeSolve() {
           }
           stopCar();
           delay(500);
-          recIntersection('R');
+          // recIntersection('R');
         }
         break;
 
@@ -332,15 +329,15 @@ void mazeSolve() {
         delay(500);
         mode = FOLLOWING_LINE;
 
-        recIntersection('L');
+        // recIntersection('L');
         break;
       case FOLLOWING_LINE:
         // Serial.println("Forward");
         // testLFSensor();
         forward();
-        recIntersection('S');
+        // recIntersection('S');
         break;
-    }
+    // }
   }
 }
 
