@@ -6,10 +6,16 @@ cv::Mat thin_sheet(cv::Mat image)
 
     cv::Mat grayImage;
     cv::cvtColor(image, grayImage, cv::COLOR_BGR2GRAY);
-
+    cv::imshow("grayImage Image", grayImage);
+    cv::waitKey(0);
+    cv::GaussianBlur(grayImage, grayImage, cv::Size(7, 7), 0);
+    cv::imshow("grayImage Image", grayImage);
+    cv::waitKey(0);
     // Threshold the grayscale image to get a binary image
     cv::Mat binaryImage;
-    cv::threshold(grayImage, binaryImage, 160, 255, cv::THRESH_BINARY);
+    cv::threshold(grayImage, binaryImage, 110, 255, cv::THRESH_BINARY);
+    cv::imshow("binaryImage Image", binaryImage);
+    cv::waitKey(0);
     cv::bitwise_not(binaryImage, binaryImage); // Invert the binary image
 
     // Create a structuring element for morphological operations
@@ -72,7 +78,10 @@ bool Desicion(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobot
     float roiHeight = 200;
 
     // Define the region of interest (ROI) rectangle
-    cv::Rect roiRect(frontrobotCenter.x - roiWidth / 2, frontrobotCenter.y - roiHeight / 2, roiWidth, roiHeight);
+    cv::Rect roiRect(static_cast<int>(frontrobotCenter.x - roiWidth / 2),
+                     static_cast<int>(frontrobotCenter.y - roiHeight / 2),
+                     static_cast<int>(roiWidth),
+                     static_cast<int>(roiHeight));
 
     // Ensure that the ROI rectangle is within the image boundaries
     roiRect &= cv::Rect(0, 0, image.cols, image.rows);
@@ -81,24 +90,26 @@ bool Desicion(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobot
     cv::Mat roiImage = image(roiRect);
     imshow("roiImage", roiImage);
     cv::waitKey(0);
-    // bool hasEdges = cv::countNonZero(roiImage) > 0;
-    std::vector<cv::Vec4i> lines;
+    // // bool hasEdges = cv::countNonZero(roiImage) > 0;
+    // std::vector<cv::Vec4i> lines;
 
-    HoughLinesP(roiImage, lines, 1, CV_PI / 180, 50, 30, 10);
-    float slope = calculateSlope(frontrobotCenter, backrobotCenter);
-    bool speedup = false;
-    for (size_t i = 0; i < lines.size(); i++)
-    {
-        cv::Vec4i l = lines[i];
-        cv::Point p1 = cv::Point(l[0], l[1]);
-        cv::Point p2 = cv::Point(l[2], l[3]);
-        float diff = abs(slope - calculateSlope(p1, p2));
-        if (diff < 1)
-            if (CalculateDistance(frontrobotCenter, p1) > CalculateDistance(backrobotCenter, p1))
-            {
-                speedup = true;
-            }
-    }
+    // HoughLinesP(roiImage, lines, 1, CV_PI / 180, 50, 30, 10);
+    // float slope = calculateSlope(frontrobotCenter, backrobotCenter);
+    // bool speedup = false;
+    // for (size_t i = 0; i < lines.size(); i++)
+    // {
+    //     cv::Vec4i l = lines[i];
+    //     cv::Point p1 = cv::Point(l[0], l[1]);
+    //     cv::Point p2 = cv::Point(l[2], l[3]);
+    //     float diff = abs(slope - calculateSlope(p1, p2));
+    //     if (diff < 1)
+    //         if (CalculateDistance(frontrobotCenter, p1) > CalculateDistance(backrobotCenter, p1))
+    //         {
+    //             speedup = true;
+    //         }
+    // }
+        bool speedup = cv::countNonZero(roiImage) > 0;
+
     return speedup;
 }
 bool Desicion2(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobotCenter)
@@ -111,8 +122,8 @@ bool Desicion2(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobo
     directionVector.y /= magnitude;
 
     // Scale the direction vector to set the dimensions of the ROI
-    float roiWidth = 150;
-    float roiHeight = 50;
+    float roiWidth = 200;
+    float roiHeight = 200;
     if (directionVector.x < directionVector.y)
     {
         cv::swap(roiHeight, roiWidth);
@@ -150,7 +161,10 @@ bool Desicion2(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobo
     if (topLeft.y + roiHeight >= image.rows)
         topLeft.y = image.rows - roiHeight - 1;
     // // Define the region of interest (ROI) rectangle
-    cv::Rect roiRect(topLeft.x, topLeft.y, roiWidth, roiHeight);
+    cv::Rect roiRect(static_cast<int>(topLeft.x),
+                     static_cast<int>(topLeft.y),
+                     static_cast<int>(roiWidth),
+                     static_cast<int>(roiHeight));
     std::cout << "ROI rectangle" << roiRect << std::endl;
     // Extract the region of interest from the original image
     cv::Mat roiImage = image(roiRect);
@@ -167,7 +181,10 @@ bool draw(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrobotCent
     int roiHeight = 500;
 
     // Define the region of interest (ROI) rectangle
-    cv::Rect roiRect(frontrobotCenter.x - roiWidth / 2, frontrobotCenter.y - roiHeight / 2, roiWidth, roiHeight);
+    cv::Rect roiRect(static_cast<int>(frontrobotCenter.x - roiWidth / 2),
+                     static_cast<int>(frontrobotCenter.y - roiHeight / 2),
+                     static_cast<int>(roiWidth),
+                     static_cast<int>(roiHeight));
 
     // Ensure that the ROI rectangle is within the image boundaries
     roiRect &= cv::Rect(0, 0, image.cols, image.rows);
@@ -262,7 +279,10 @@ bool draw_angle(cv::Mat image, cv::Point2f frontrobotCenter, cv::Point2f backrob
     if (topLeft.y + roiHeight > image.rows)
         topLeft.y = image.rows - roiHeight;
     // // Define the region of interest (ROI) rectangle
-    cv::Rect roiRect(topLeft.x, topLeft.y, roiWidth, roiHeight);
+    cv::Rect roiRect(static_cast<int>(topLeft.x),
+                     static_cast<int>(topLeft.y),
+                     static_cast<int>(roiWidth),
+                     static_cast<int>(roiHeight));
     std::cout << "ROI rectangle" << roiRect << std::endl;
     // // Extract the region of interest from the original image
     cv::Mat roiImage = image(roiRect);

@@ -4,13 +4,12 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include <iostream>
+#include "utils.h"
 
 
 
-cv::Point2f robotFront(cv::Mat image);
-cv::Point2f robotBack(cv::Mat image);
-
+bool robotFront(cv::Mat& image,cv::Point2f& front);
+bool robotBack(cv::Mat& image,cv::Point2f& back);
+bool detectcar(cv::Mat& image,cv::Mat& linedImage);
 
 #endif
-
-
