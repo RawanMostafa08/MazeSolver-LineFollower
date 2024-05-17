@@ -30,8 +30,8 @@ int pathIndex = 0;
 // #define turning_speed 80
 int P, D, I = 0, previousError, PIDvalue;
 int lsp, rsp;
-int lfspeed = 37;
-int turnspeed = 40;
+int lfspeed = 60;
+int turnspeed = 50;
 double Kp = 7.8;
 double Ki = 0;
 double Kd = 10;
@@ -46,6 +46,7 @@ double Kd = 10;
 int mode = STOPPED, previousMode = STOPPED;
 int status = false;
 void PID() {
+ 
   if (LFSensor[0] == 0 && LFSensor[1] == 0 && LFSensor[2] == 1 && LFSensor[3] == 0 && LFSensor[4] == 0)
     error = 0;
   else if (LFSensor[0] == 0 && LFSensor[1] == 0 && LFSensor[2] == 1 && LFSensor[3] == 1 && LFSensor[4] == 0)
@@ -64,8 +65,6 @@ void PID() {
     error = -3;
   else if (LFSensor[0] == 1 && LFSensor[1] == 0 && LFSensor[2] == 0 && LFSensor[3] == 0 && LFSensor[4] == 0)
     error = -4;
-  else if (LFSensor[0] == 0 && LFSensor[1] == 0 && LFSensor[2] == 0 && LFSensor[3] == 0 && LFSensor[4] == 0)
-    error = 0;
 
   P = error;
   I += error;
@@ -75,21 +74,24 @@ void PID() {
 
   lsp = lfspeed - PIDvalue;
   rsp = lfspeed + PIDvalue;
-  if (lsp > 150)
+  if (lsp > 255)
     // lsp = 150;
     lsp = 255;
   if (lsp < 0)
     lsp = 0;
-  if (rsp > 150)
+  if (rsp > 255)
     // rsp = 150;
     rsp = 255;
   if (rsp < 0)
     rsp = 0;
 
-  // Serial.print("  rsp");
-  // Serial.print(lsp);
-  // Serial.print("  lsp");
-  // Serial.println(rsp);
+  Serial.print("  PID value");
+  Serial.print(PIDvalue);
+
+  Serial.print("  rsp");
+  Serial.print(lsp);
+  Serial.print("  lsp");
+  Serial.println(rsp);
 
 
   analogWrite(leftSpeed, rsp);
@@ -135,7 +137,6 @@ void Read_IR_sensors() {
   previousMode = mode;
   if (LFSensor[0] && LFSensor[1] && LFSensor[2] && LFSensor[3] && LFSensor[4]) {
     // 11111
-
     mode = CONT_LINE;
     // error = 0;
   } else if (!LFSensor[0] && LFSensor[2] && LFSensor[3] && LFSensor[4]) {
@@ -343,6 +344,7 @@ void mazeSolve() {
 
 void loop() {
   mazeSolve();  // First pass to solve the maze
+  // testLFSensor();
   // right(50);
   // right(50);
   // Uturn();

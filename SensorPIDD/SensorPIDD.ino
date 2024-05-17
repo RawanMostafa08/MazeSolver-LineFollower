@@ -24,9 +24,9 @@ const int numSensors = 5; // Number of sensors
 
 //SPEED 100
 // Max Kp in P controller = 18
-double Kp = 9;
+double Kp = 13;
 double Ki = 0;
-double Kd = 50;
+double Kd = 30;
 
 
 //  11/5 
@@ -47,7 +47,7 @@ double Kd = 50;
 // KI = 0
 // KD = 10
 //SPEED = 45
-int baseSpeed = 50;
+int baseSpeed = 70;
 
 
 // char Incoming_value = 0;
@@ -151,12 +151,12 @@ void loop() {
   for (int i = 0; i < numSensors; i++) {
     sensorValues[i] = digitalRead(sensorPin[i]);
   }
-    // Serial.print("  Sensors value: ");
-    // Serial.print(sensorValues[0]);
-    // Serial.print(sensorValues[1]);
-    // Serial.print(sensorValues[2]);
-    // Serial.print(sensorValues[3]);
-    // Serial.print(sensorValues[4]);
+    Serial.print("  Sensors value: ");
+    Serial.print(sensorValues[0]);
+    Serial.print(sensorValues[1]);
+    Serial.print(sensorValues[2]);
+    Serial.print(sensorValues[3]);
+    Serial.print(sensorValues[4]);
 
 
 if (sensorValues[0] == 1 && sensorValues[1] == 1 && sensorValues[2] == 0 && sensorValues[3] == 1 && sensorValues[4] == 1)
@@ -177,20 +177,7 @@ else if (sensorValues[0] == 0 && sensorValues[1] == 0 && sensorValues[2] == 1 &&
     error = -3;
 else if (sensorValues[0] == 0 && sensorValues[1] == 1 && sensorValues[2] == 1 && sensorValues[3] == 1 && sensorValues[4] == 1)
     error = -4;
-// while (sensorValues[0] == 1 && sensorValues[1] == 1 && sensorValues[2] == 1 && sensorValues[3] == 1 && sensorValues[4] == 1)
-// { 
-//   StopMotors();
-//     for (int i = 0; i < numSensors; i++) {
-//     sensorValues[i] = digitalRead(sensorPin[i]);
-//   }
-//     // Serial.print("  Sensors value: ");
-//     // Serial.print(sensorValues[0]);
-//     // Serial.print(sensorValues[1]);
-//     // Serial.print(sensorValues[2]);
-//     // Serial.print(sensorValues[3]);
-//     // Serial.println(sensorValues[4]);
-  
-// }
+
 
 // MoveMotors();
 // if (!(sensorValues[0] == 1 && sensorValues[1] == 1 && sensorValues[2] == 1 && sensorValues[3] == 1 && sensorValues[4] == 1)){ //if not all white

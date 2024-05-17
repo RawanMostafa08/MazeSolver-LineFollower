@@ -31,31 +31,7 @@ unsigned char dir;
 char path[100] = "";
 unsigned char pathLength = 0; // the length of the path
 int pathIndex = 0;
-/* read line sensors values
 
-Sensor Array 	Error Value
-0 0 0 0 1	 4
-0 0 0 1 1	 3
-0 0 0 1 0	 2
-0 0 1 1 0	 1
-0 0 1 0 0	 0
-0 1 1 0 0	-1
-0 1 0 0 0	-2
-1 1 0 0 0	-3
-1 0 0 0 0	-4
-
-1 1 1 1 1        0 Robot found continuous line - test if an intersection or end of maze
-0 0 0 0 0        0 Robot found no line: turn 180o
-*/
-
-/*
-Sensor  Array   Error Value
-0 0 1   2
-0 1 1   1
-0 1 0   0
-1 1 0  -1
-1 0 0  -2
-*/
 const int iniMotorPower = 250;
 const int adj = 0;
 float error=0, P=0, I=0, D=0, PIDvalue=0;

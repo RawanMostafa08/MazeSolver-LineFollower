@@ -8,8 +8,8 @@ const int BackSensorleft = 3;    // left
 const int BackSensorcenter = 4;  // right
 const int BackSensorright = 5;   // right
 
-const int leftSpeed = 11;  // means pin 9 on the Arduino controls the speed of left motor
-const int rightSpeed = 10;
+const int leftSpeed = 10;  // means pin 9 on the Arduino controls the speed of left motor
+const int rightSpeed = 11;
 const int in1 = 7;  // in1
 const int in2 = 8;  // in2
 
@@ -44,24 +44,27 @@ double Kd = 30;
 int mode = STOPPED, previousMode = STOPPED;
 int status = false;
 void PID() {
- if (LFSensor[0] == 1 && LFSensor[1] == 1 && LFSensor[2] == 0 && LFSensor[3] == 1 && LFSensor[4] == 1)
+  Read_IR_sensors();
+  if (LFSensor[0] == 0 && LFSensor[1] == 0 && LFSensor[2] == 1 && LFSensor[3] == 0 && LFSensor[4] == 0)
     error = 0;
-else if (LFSensor[0] == 1 && LFSensor[1] == 1 && LFSensor[2] == 0 && LFSensor[3] == 0 && LFSensor[4] == 1)
+  else if (LFSensor[0] == 0 && LFSensor[1] == 0 && LFSensor[2] == 1 && LFSensor[3] == 1 && LFSensor[4] == 0)
     error = 1;
-else if (LFSensor[0] == 1 && LFSensor[1] == 1 && LFSensor[2] == 1 && LFSensor[3] == 0 && LFSensor[4] == 1)
+  else if (LFSensor[0] == 0 && LFSensor[1] == 0 && LFSensor[2] == 0 && LFSensor[3] == 1 && LFSensor[4] == 0)
     error = 2;
-else if (LFSensor[0] == 1 && LFSensor[1] == 1 && LFSensor[2] == 1 && LFSensor[3] == 0 && LFSensor[4] == 0)
+  else if (LFSensor[0] == 0 && LFSensor[1] == 0 && LFSensor[2] == 0 && LFSensor[3] == 1 && LFSensor[4] == 1)
     error = 3;
-else if (LFSensor[0] == 1 && LFSensor[1] == 1 && LFSensor[2] == 1 && LFSensor[3] == 1 && LFSensor[4] == 0)
+  else if (LFSensor[0] == 0 && LFSensor[1] == 0 && LFSensor[2] == 0 && LFSensor[3] == 0 && LFSensor[4] == 1)
     error = 4;
-else if (LFSensor[0] == 1 && LFSensor[1] == 0 && LFSensor[2] == 0 && LFSensor[3] == 1 && LFSensor[4] == 1)
+  else if (LFSensor[0] == 0 && LFSensor[1] == 1 && LFSensor[2] == 1 && LFSensor[3] == 0 && LFSensor[4] == 0)
     error = -1;
-else if (LFSensor[0] == 1 && LFSensor[1] == 0 && LFSensor[2] == 1 && LFSensor[3] == 1 && LFSensor[4] == 1)
+  else if (LFSensor[0] == 0 && LFSensor[1] == 1 && LFSensor[2] == 0 && LFSensor[3] == 0 && LFSensor[4] == 0)
     error = -2;
-else if (LFSensor[0] == 0 && LFSensor[1] == 0 && LFSensor[2] == 1 && LFSensor[3] == 1 && LFSensor[4] == 1)
+  else if (LFSensor[0] == 1 && LFSensor[1] == 1 && LFSensor[2] == 0 && LFSensor[3] == 0 && LFSensor[4] == 0)
     error = -3;
-else if (LFSensor[0] == 0 && LFSensor[1] == 1 && LFSensor[2] == 1 && LFSensor[3] == 1 && LFSensor[4] == 1)
+  else if (LFSensor[0] == 1 && LFSensor[1] == 0 && LFSensor[2] == 0 && LFSensor[3] == 0 && LFSensor[4] == 0)
     error = -4;
+  else if (LFSensor[0] == 0 && LFSensor[1] == 0 && LFSensor[2] == 0 && LFSensor[3] == 0 && LFSensor[4] == 0)
+    error = 0;
 
   P = error;
   I += error;
@@ -70,35 +73,36 @@ else if (LFSensor[0] == 0 && LFSensor[1] == 1 && LFSensor[2] == 1 && LFSensor[3]
   previousError = error;
 
   lsp = lfspeed - PIDvalue;
+Serial.println(error);
   rsp = lfspeed + PIDvalue;
-  if (lsp > 255)
+  if (lsp > 150)
     // lsp = 150;
     lsp = 255;
   if (lsp < 0)
     lsp = 0;
-  if (rsp > 255)
+  if (rsp > 150)
     // rsp = 150;
     rsp = 255;
   if (rsp < 0)
-     rsp = 0;
+    rsp = 0;
 
-  // Serial.print("  rsp");
-  // Serial.print(lsp);
-  // Serial.print("  lsp");
-  // Serial.println(rsp);
+  Serial.print("  rsp");
+  Serial.print(lsp);
+  Serial.print("  lsp");
+  Serial.println(rsp);
 
 
-  analogWrite(leftSpeed, lsp);
-  analogWrite(rightSpeed, rsp);
+  analogWrite(leftSpeed, rsp);
+  analogWrite(rightSpeed, lsp);
 }
 
 void readLightSensor() {
   // 0 --> white
-  LFSensor[0] = digitalRead(SensorPin0);
-  LFSensor[1] = digitalRead(SensorPin1);
-  LFSensor[2] = digitalRead(SensorPin2);
-  LFSensor[3] = digitalRead(SensorPin3);
-  LFSensor[4] = digitalRead(SensorPin4);
+  LFSensor[0] = !digitalRead(SensorPin0);
+  LFSensor[1] = !digitalRead(SensorPin1);
+  LFSensor[2] = !digitalRead(SensorPin2);
+  LFSensor[3] = !digitalRead(SensorPin3);
+  LFSensor[4] = !digitalRead(SensorPin4);
 }
 void readBackSensor() {
 
@@ -128,6 +132,12 @@ void testLFSensor() {
 void Read_IR_sensors() {
   readLightSensor();
   readBackSensor();
+  Serial.print(LFSensor[0]);
+  Serial.print(LFSensor[1]);
+  Serial.print(LFSensor[2]);
+  Serial.print(LFSensor[3]);
+  Serial.println(LFSensor[4]);
+
   // leftState=digitalRead(leftSensor);
   // rightState = digitalRead(rightSensor);
 
@@ -243,24 +253,24 @@ void mazeSolve() {
     switch (mode) {
       case NO_LINE:
         Serial.println("uturn");
-        if (previousMode == FOLLOWING_LINE) {
-          Serial.println("ana fe no line");
-          // forward();
-          stopCar();
-          delay(500);
-          Uturn();
-          delay(1000);
-          Serial.println("ana abl el while");
-          while (!(BKSensor[0] == 0 && BKSensor[1] == 1 && BKSensor[2] == 0)) {
-            Serial.println("ana fel while ele fe no line");
-            readBackSensor();
-          }
-          stopCar();
-          Serial.println("ana ba3d el sto0p");
-          delay(500);
+        // if (previousMode == FOLLOWING_LINE) {
+        //   Serial.println("ana fe no line");
+        //   // forward();
+        //   stopCar();
+        //   delay(500);
+        //   Uturn();
+        //   delay(1000);
+        //   Serial.println("ana abl el while");
+        //   while (!(BKSensor[0] == 0 && BKSensor[1] == 1 && BKSensor[2] == 0)) {
+        //     Serial.println("ana fel while ele fe no line");
+        //     readBackSensor();
+        //   }
+        //   stopCar();
+        //   Serial.println("ana ba3d el sto0p");
+        //   delay(500);
 
-          mode = FOLLOWING_LINE;
-        }
+        //   mode = FOLLOWING_LINE;
+        // }
         // else {
 
         // }
@@ -341,11 +351,13 @@ void mazeSolve() {
 
 void loop() {
   // mazeSolve();  // First pass to solve the maze
+        forward();
+
   // right(50);
   // right(50);
   // Uturn();
   // right();
   // readLightSensor();
   // testLFSensor();
-  forward();
+  // forward();
 }
