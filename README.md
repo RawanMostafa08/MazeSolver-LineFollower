@@ -62,6 +62,7 @@ https://github.com/RawanMostafa08/MazeSolver-LineFollower/assets/97397431/6c2257
 <a id ="contributors"></a>
 
 ## <img  align="center" width= 70px height =55px src="https://media0.giphy.com/media/Xy702eMOiGGPzk4Zkd/giphy.gif?cid=ecf05e475vmf48k83bvzye3w2m2xl03iyem3tkuw2krpkb7k&rid=giphy.gif&ct=s"> Contributors 
+![WhatsApp Image 2024-05-16 at 19 49 54_e1af7e46](https://github.com/RawanMostafa08/MazeSolver-LineFollower/assets/97397431/4c0ea09b-6ac5-49d8-a88d-26ab501a8755)
 
 <table align="center" >
   <tr>
