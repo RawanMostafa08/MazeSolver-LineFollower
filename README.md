@@ -17,7 +17,6 @@
 - <a href ="#lf"> ♾️ Line Follower</a>
 - <a href ="#maze"> 🔚 Maze Solver</a>
 - <a href ="#contributors"> ✨ Contributors</a>
-- <a href ="#license"> 🔒 License</a>
 <hr style="background-color: #4b4c60"></hr>
 
  <a id = "about"></a>
@@ -47,12 +46,18 @@ This project showcases a Maze Solver and Line Follower Robot implemented using a
 <a id = "lf"></a>
 
 ## ♾️ Line Follower
+Our line follower managed to finish the path in 15 seconds and got 2nd place in the competition 🥈
+
+https://github.com/RawanMostafa08/MazeSolver-LineFollower/assets/97397431/769f7a10-e9a4-4434-8585-7db413b63449
 
 
- <a id="structure"> </a>
+ <a id="maze"> </a>
+## 🔚 Maze Solver
+
+https://github.com/RawanMostafa08/MazeSolver-LineFollower/assets/97397431/6c2257ab-7960-4379-b66c-60756d102888
+
 
 <hr style="background-color: #4b4c60"></hr>
-<a id ="video"></a>
 
 <a id ="contributors"></a>
 
@@ -60,9 +65,16 @@ This project showcases a Maze Solver and Line Follower Robot implemented using a
 
 <table align="center" >
   <tr>
-      <td align="center"><a href="https://github.com/SH8664"><img src="https://avatars.githubusercontent.com/u/113303945?v=4" width="150px;" alt=""/><br /><sub><b>Sara Bisheer</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/SH8664"><img src="https://avatars.githubusercontent.com/u/94644017?s=64&v=4" width="150px;" alt=""/><br /><sub><b>Sara Bisheer</b></sub></a><br /></td>
       <td align="center"><a href="https://github.com/rawanMostafa08"><img src="https://avatars.githubusercontent.com/u/97397431?v=4" width="150px;" alt=""/><br /><sub><b>Rawan Mostafa</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/mou-code"><img src="https://avatars.githubusercontent.com/u/123744354?s=64&v=4" width="150px;" alt=""/><br /><sub><b>Moustafa Mohammed</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/MohammadAlomar8"><img src="https://avatars.githubusercontent.com/u/119791309?s=64&v=4" width="150px;" alt=""/><br /><sub><b>Mohamed Alomar</b></sub></a><br /></td>
       <td align="center"><a href="https://github.com//mennamohamed0207"><img src="https://avatars.githubusercontent.com/u/90017398?v=4" width="150px;" alt=""/><br /><sub><b>Menna Mohammed</b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/fatmaebrahim"><img src="https://avatars.githubusercontent.com/u/113191710?v=4" width="150;" alt=""/><br /><sub><b>Fatma Ebrahim</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/fatmaebrahim"><img src="https://avatars.githubusercontent.com/u/113191710?s=64&v=4" width="150px;" alt=""/><br /><sub><b>Fatma Ebrahim</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/MostafaBinHani"><img src="https://avatars.githubusercontent.com/u/119853216?s=64&v=4" width="150px;" alt=""/><br /><sub><b>Mostafa Hany</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/kaokab33"><img src="https://avatars.githubusercontent.com/u/93781327?s=64&v=4" width="150px;" alt=""/><br /><sub><b>Kareem Samy</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/nancyalgazzar"><img src="https://avatars.githubusercontent.com/u/90017398?v=4" width="150px;" alt=""/><br /><sub><b>Nancy Ayman</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/Menna-Ahmed7"><img src="https://avatars.githubusercontent.com/u/110634473?s=64&v=4" width="150;" alt=""/><br /><sub><b>Mennatallah Ahmed</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/YaraHisham61"><img src="https://avatars.githubusercontent.com/u/88517271?s=64&v=4" width="150;" alt=""/><br /><sub><b>Yara Hisham</b></sub></a><br /></td>
   </tr>
 </table>
